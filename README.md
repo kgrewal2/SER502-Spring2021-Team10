@@ -1,40 +1,27 @@
-# SER502_Project
+# SER502
 Main Project Repository for SER502 (Emerging Languages and Programming Paradigms)
 
-# Quick Start
+## Environment Used
+- Linux
 
-## Installation
+## Tools Used
+- Prolog
 
-TODO
+## Quick Start
+### Installing Prerequisite Language
+- TODO
 
-## Usage
+### Installing Developed Language
+- TODO
 
-TODO
+### Building Compiler
+- TODO
 
-# Pending Features
-- Operators and Primitive Types
-    - Boolean
-        - AND
-        - OR
-        - NOT
-- At least one numeric type
-    - Integer
-    - Floating Point
-- Operations
-    - Addition
-    - Subtraction
-    - Multiplication
-    - Division
-- String
-    - Assignment
-    - Optional Operations
-- Associate value with identifiers, Assignment Operator
-- Conditional Constructs
-    - Ternary Operator
-    - If Else Then
-    - For
-    - While
-    - for index in range(2, 5) should be the same as for(i=2; i<5; i++)
+### Running Program
+- TODO
+
+### YouTube Video
+- Link
 
 ## Contributors
 - Kamal Penmetcha
@@ -42,7 +29,7 @@ TODO
 - Nikhil Hiremath
 - Subramanian Arunachalam
 
-# Acknowledgments
+## Acknowledgments
 - Dr. Ajay Bansal
 - Sakshi Jain
 
