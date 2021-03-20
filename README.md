@@ -7,20 +7,25 @@ Main Project Repository for SER502 (Emerging Languages and Programming Paradigms
 ## Tools Used
 - Prolog
 
-## Quick Start
-### Installing Prerequisite Language
+## Installing Prolog
+### Arch Linux
+```
+$ pacman -S swi-prolog
+```
+
+### Windows/MacOS
+Get the latest stable version from the [Official Website](https://www.swi-prolog.org/download/stable)
+
+## Installing Developed Language
 - TODO
 
-### Installing Developed Language
+## Building Compiler
 - TODO
 
-### Building Compiler
+## Running Program
 - TODO
 
-### Running Program
-- TODO
-
-### YouTube Video
+## YouTube Video
 - Link
 
 ## Contributors
