@@ -2,6 +2,7 @@
 % NON-TERMINALS %
 %%%%%%%%%%%%%%%%%
 
+% Start Symbol
 program --> command_list.
 
 block --> ['{'], command_list, ['}'].
@@ -11,9 +12,11 @@ command_list --> command_without_block, command_list.
 command_list --> command.
 command_list --> command_without_block.
 
+% Single Line Commands
 command_without_block --> print_command.
 command_without_block --> assignment_command.
 
+% Multi Line Commands
 command --> for_loop_command.
 command --> while_loop_command.
 command --> for_enhanced_command.
@@ -21,14 +24,14 @@ command --> if_command.
 command --> if_elif_else_command.
 command --> if_else_command.
 
-if_command --> if_statement.
-if_elif_else_command --> if_statement, elif_statement, else_statement.
-if_else_command --> if_statement, else_statement.
+if_command --> if_part.
+if_elif_else_command --> if_part, elif_part, else_part.
+if_else_command --> if_part, else_part.
 
-if_statement --> ['if'], ['('], condition, [')'], block.
-else_statement --> ['else'], ['('], condition, [')'], block.
-elif_statement --> ['elif'], ['('], condition, [')'], block.
-elif_statement --> ['elif'], ['('], condition, [')'], block, elif_command.
+if_part --> ['if'], ['('], condition, [')'], block.
+else_part --> ['else'], ['('], condition, [')'], block.
+elif_part --> ['elif'], ['('], condition, [')'], block.
+elif_part --> ['elif'], ['('], condition, [')'], block, elif_command.
 
 while_loop_command --> ['while'], ['('], condition, [')'], block.
 
@@ -36,13 +39,13 @@ for_enhanced_command --> ['for'], variable_name, ['in'], ['range'], ['('], range
 
 range_value --> variable_name | integer.
 
-for_loop_command --> ['for'], ['('], assignment, [';'], condition,  [';'], variable_change_statement, [')'], block.
+for_loop_command --> ['for'], ['('], assignment, [';'], condition, [';'], variable_change_part, [')'], block.
 
-condition --> variable_name, comparison_operators, expression.
+variable_change_part --> increment_expression.
+variable_change_part --> decrement_expression.
+variable_change_part --> variable_name, assignment_operator, expression.
 
-variable_change_statement --> increment_expression.
-variable_change_statement --> decrement_expression.
-variable_change_statement --> variable_name, assignment_operator, expression.
+condition --> expression, comparison_operators, expression.
 
 decrement_expression --> variable_name, decrement_operator.
 decrement_expression --> decrement_operator, variable_name.
@@ -60,12 +63,11 @@ ternary_expression --> ['('], condition, [')'], ['?'], expression, [':'], expres
 
 value --> float | integer | boolean_value | string_value | variable_name.
 
-boolean_operators --> and | or | not.
+boolean_operators --> and_operator | or_operator | not_operator.
 
 operators --> ['+'] | ['-'] | ['*'] | ['/'] | boolean_operators.
 
-assignment_command --> assignment, end_of_command.
-assignment --> variable_name, assignment_operator, expression.
+assignment_command --> variable_name, assignment_operator, expression, end_of_command.
 
 variable_declaration_command --> variable_type, variable_name, end_of_command.
 variable_declaration_command --> variable_type, variable_name, assignment_operator, expression, end_of_command.
@@ -73,7 +75,7 @@ variable_declaration_command --> variable_type, variable_name, assignment_operat
 variable_name --> lower_case, variable_name.
 variable_name --> variable_name, upper_case.
 variable_name --> variable_name, upper_case, variable_name.
-variable_name --> variable_name, underscore, variable_name.
+variable_name --> variable_name, ['_'], variable_name.
 variable_name --> lower_case.
 
 string_value --> single_quote, character_phrase, single_quote.
