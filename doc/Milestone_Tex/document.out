@@ -1,0 +1,29 @@
+\BOOKMARK [1][-]{section.1}{About Developed Language}{}% 1
+\BOOKMARK [1][-]{section.2}{Project Pipeline}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Source Code}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Lexer}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Parser}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Evaluator}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Programming Languages Used}{}% 7
+\BOOKMARK [1][-]{section.4}{Design}{}% 8
+\BOOKMARK [2][-]{subsection.4.1}{Program}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.2}{Commands and Command List}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.3}{Block}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.4}{Commands with block}{section.4}% 12
+\BOOKMARK [3][-]{subsubsection.4.4.1}{For Loop}{subsection.4.4}% 13
+\BOOKMARK [3][-]{subsubsection.4.4.2}{While Loop}{subsection.4.4}% 14
+\BOOKMARK [3][-]{subsubsection.4.4.3}{For Loop \(Enhanced\)}{subsection.4.4}% 15
+\BOOKMARK [3][-]{subsubsection.4.4.4}{If}{subsection.4.4}% 16
+\BOOKMARK [3][-]{subsubsection.4.4.5}{If Elif Else}{subsection.4.4}% 17
+\BOOKMARK [3][-]{subsubsection.4.4.6}{If Else}{subsection.4.4}% 18
+\BOOKMARK [2][-]{subsection.4.5}{Commands without block}{section.4}% 19
+\BOOKMARK [3][-]{subsubsection.4.5.1}{Print}{subsection.4.5}% 20
+\BOOKMARK [3][-]{subsubsection.4.5.2}{Assignment}{subsection.4.5}% 21
+\BOOKMARK [2][-]{subsection.4.6}{Expressions}{section.4}% 22
+\BOOKMARK [2][-]{subsection.4.7}{Variables}{section.4}% 23
+\BOOKMARK [2][-]{subsection.4.8}{Data Types}{section.4}% 24
+\BOOKMARK [3][-]{subsubsection.4.8.1}{Integer}{subsection.4.8}% 25
+\BOOKMARK [3][-]{subsubsection.4.8.2}{Floating Point Numbers}{subsection.4.8}% 26
+\BOOKMARK [3][-]{subsubsection.4.8.3}{String}{subsection.4.8}% 27
+\BOOKMARK [3][-]{subsubsection.4.8.4}{Boolean}{subsection.4.8}% 28
+\BOOKMARK [2][-]{subsection.4.9}{Reserved Keywords}{section.4}% 29

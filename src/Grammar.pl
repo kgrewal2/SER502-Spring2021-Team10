@@ -15,6 +15,7 @@ command_list --> command_without_block.
 % Single Line Commands
 command_without_block --> print_command.
 command_without_block --> assignment_command.
+command_without_block --> variable_declaration_command.
 
 % Multi Line Commands
 command --> for_loop_command.
@@ -113,8 +114,8 @@ symbol --> [' '] | ['!'] | ['\"'] | ['#'] | ['$'] | ['%'] | ['&'] | ['\''] | ['(
 
 digit --> ['0'] | ['1'] | ['2'] | ['3'] | ['4'] | ['5'] | ['6'] | ['7'] | ['8'] | ['9'].
 
-boolean_value --> ['true'].
-boolean_value --> ['false'].
+boolean_value --> ['True'].
+boolean_value --> ['False'].
 
 assignment_operator --> [‘=’].
 end_of_command --> [‘;’].
