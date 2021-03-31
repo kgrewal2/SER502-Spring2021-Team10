@@ -1,0 +1,8 @@
+Milestone 1
+- Design Document - Team Discussions
+
+Project Level Contribution
+- Nikhil Hiremath - Lexer
+- Kamal Penmetcha - Parser
+- Karandeep Singh - Evaluator
+- Subramanian     - Test Scripts
