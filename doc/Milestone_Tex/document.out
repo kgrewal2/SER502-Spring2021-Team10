@@ -1,29 +1,41 @@
 \BOOKMARK [1][-]{section.1}{About Developed Language}{}% 1
 \BOOKMARK [1][-]{section.2}{Project Pipeline}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Source Code}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Lexer}{section.2}% 4
-\BOOKMARK [2][-]{subsection.2.3}{Parser}{section.2}% 5
-\BOOKMARK [2][-]{subsection.2.4}{Evaluator}{section.2}% 6
-\BOOKMARK [1][-]{section.3}{Programming Languages Used}{}% 7
-\BOOKMARK [1][-]{section.4}{Design}{}% 8
-\BOOKMARK [2][-]{subsection.4.1}{Program}{section.4}% 9
-\BOOKMARK [2][-]{subsection.4.2}{Commands and Command List}{section.4}% 10
-\BOOKMARK [2][-]{subsection.4.3}{Block}{section.4}% 11
-\BOOKMARK [2][-]{subsection.4.4}{Commands with block}{section.4}% 12
-\BOOKMARK [3][-]{subsubsection.4.4.1}{For Loop}{subsection.4.4}% 13
-\BOOKMARK [3][-]{subsubsection.4.4.2}{While Loop}{subsection.4.4}% 14
-\BOOKMARK [3][-]{subsubsection.4.4.3}{For Loop \(Enhanced\)}{subsection.4.4}% 15
-\BOOKMARK [3][-]{subsubsection.4.4.4}{If}{subsection.4.4}% 16
-\BOOKMARK [3][-]{subsubsection.4.4.5}{If Elif Else}{subsection.4.4}% 17
-\BOOKMARK [3][-]{subsubsection.4.4.6}{If Else}{subsection.4.4}% 18
-\BOOKMARK [2][-]{subsection.4.5}{Commands without block}{section.4}% 19
-\BOOKMARK [3][-]{subsubsection.4.5.1}{Print}{subsection.4.5}% 20
-\BOOKMARK [3][-]{subsubsection.4.5.2}{Assignment}{subsection.4.5}% 21
-\BOOKMARK [2][-]{subsection.4.6}{Expressions}{section.4}% 22
-\BOOKMARK [2][-]{subsection.4.7}{Variables}{section.4}% 23
-\BOOKMARK [2][-]{subsection.4.8}{Data Types}{section.4}% 24
-\BOOKMARK [3][-]{subsubsection.4.8.1}{Integer}{subsection.4.8}% 25
-\BOOKMARK [3][-]{subsubsection.4.8.2}{Floating Point Numbers}{subsection.4.8}% 26
-\BOOKMARK [3][-]{subsubsection.4.8.3}{String}{subsection.4.8}% 27
-\BOOKMARK [3][-]{subsubsection.4.8.4}{Boolean}{subsection.4.8}% 28
-\BOOKMARK [2][-]{subsection.4.9}{Reserved Keywords}{section.4}% 29
+\BOOKMARK [2][-]{subsection.2.1}{Run Script}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Source Code}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Lexer}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Parser}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Evaluator}{section.2}% 7
+\BOOKMARK [1][-]{section.3}{Programming Languages Used}{}% 8
+\BOOKMARK [1][-]{section.4}{Data Structures}{}% 9
+\BOOKMARK [1][-]{section.5}{Design}{}% 10
+\BOOKMARK [2][-]{subsection.5.1}{Program}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.2}{Commands and Command List}{section.5}% 12
+\BOOKMARK [2][-]{subsection.5.3}{Block}{section.5}% 13
+\BOOKMARK [2][-]{subsection.5.4}{Commands with block}{section.5}% 14
+\BOOKMARK [3][-]{subsubsection.5.4.1}{For Loop}{subsection.5.4}% 15
+\BOOKMARK [3][-]{subsubsection.5.4.2}{While Loop}{subsection.5.4}% 16
+\BOOKMARK [3][-]{subsubsection.5.4.3}{For Loop \(Enhanced\)}{subsection.5.4}% 17
+\BOOKMARK [3][-]{subsubsection.5.4.4}{If}{subsection.5.4}% 18
+\BOOKMARK [3][-]{subsubsection.5.4.5}{If Elif Else}{subsection.5.4}% 19
+\BOOKMARK [3][-]{subsubsection.5.4.6}{If Else}{subsection.5.4}% 20
+\BOOKMARK [2][-]{subsection.5.5}{Commands without block}{section.5}% 21
+\BOOKMARK [3][-]{subsubsection.5.5.1}{Print}{subsection.5.5}% 22
+\BOOKMARK [3][-]{subsubsection.5.5.2}{Variable Declaration}{subsection.5.5}% 23
+\BOOKMARK [3][-]{subsubsection.5.5.3}{Variable Assignment}{subsection.5.5}% 24
+\BOOKMARK [2][-]{subsection.5.6}{Variable Naming}{section.5}% 25
+\BOOKMARK [2][-]{subsection.5.7}{Data Types}{section.5}% 26
+\BOOKMARK [3][-]{subsubsection.5.7.1}{Integer}{subsection.5.7}% 27
+\BOOKMARK [3][-]{subsubsection.5.7.2}{Floating Point Numbers}{subsection.5.7}% 28
+\BOOKMARK [3][-]{subsubsection.5.7.3}{String}{subsection.5.7}% 29
+\BOOKMARK [3][-]{subsubsection.5.7.4}{Boolean}{subsection.5.7}% 30
+\BOOKMARK [2][-]{subsection.5.8}{Operations}{section.5}% 31
+\BOOKMARK [3][-]{subsubsection.5.8.1}{Addition}{subsection.5.8}% 32
+\BOOKMARK [3][-]{subsubsection.5.8.2}{Subtraction}{subsection.5.8}% 33
+\BOOKMARK [3][-]{subsubsection.5.8.3}{Multiplication}{subsection.5.8}% 34
+\BOOKMARK [3][-]{subsubsection.5.8.4}{Division}{subsection.5.8}% 35
+\BOOKMARK [3][-]{subsubsection.5.8.5}{Braces}{subsection.5.8}% 36
+\BOOKMARK [3][-]{subsubsection.5.8.6}{Ternary Operator}{subsection.5.8}% 37
+\BOOKMARK [2][-]{subsection.5.9}{Reserved Keywords}{section.5}% 38
+\BOOKMARK [2][-]{subsection.5.10}{Other potential features}{section.5}% 39
+\BOOKMARK [1][-]{section.6}{Contribution}{}% 40
+\BOOKMARK [1][-]{section.7}{Grammar}{}% 41
