@@ -1,1 +1,10 @@
-x = 3 + 42 * (s - t)
+
+# Operators
+x = 3 + 42 * (s - t) / 3 % 8 ^ 3
+
+# Conditons
+a > b < c
+l1 <= l2
+Z >= Y
+P == Q
+
