@@ -5,9 +5,9 @@ from sly import Lexer
 class CalcLexer(Lexer):
     # Set of token names.   This is always required
 
-    literals = {'{', '}', ',', '?', ';', ':', '[', ']', '(', ')'}
+    literals = {'{', '}', ',', '?', ';', ':', '[', ']', '(', ')', '.', '!'}
     tokens = {ID, EQUAL, LE, LT, GE, GT, ASSIGN, FLOAT, NUMBER, PLUS, MINUS, MULTIPLY,
-              DIVIDE, MODULO, POW, DOUBLE_QUOTES, SINGLE_QUOTES }
+              DIVIDE, MODULO, POW, DOUBLE_QUOTES, SINGLE_QUOTES , INCREMENT, DECREMENT}
 
     # String containing ignored characters between tokens
     ignore = ' \t'
@@ -27,6 +27,9 @@ class CalcLexer(Lexer):
     GT = r'>'
     ASSIGN = r'='
 
+    INCREMENT = r'\++'
+    DECREMENT = r'\--'
+
     FLOAT = r'\d+\.\d+'
     NUMBER = r'\d+'
     PLUS = r'\+'
@@ -38,6 +41,8 @@ class CalcLexer(Lexer):
 
     DOUBLE_QUOTES = r'\"'
     SINGLE_QUOTES = r'\''
+
+
 
 
 def read_program():
