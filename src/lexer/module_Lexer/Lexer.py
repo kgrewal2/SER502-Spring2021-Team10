@@ -2,7 +2,7 @@ import sys
 from sly import Lexer
 
 
-class CalcLexer(Lexer):
+class Lexer(Lexer):
     # Set of token names.   This is always required
 
     literals = {'{', '}', ',', '?', ';', ':', '[', ']', '(', ')', '.', '!'}
@@ -45,33 +45,10 @@ class CalcLexer(Lexer):
 
 
 
-def read_program():
-    # Checking the file extension
-    file_extn = sys.argv[1][-4:]
-    if file_extn == ".imp":
-        # Handling file operations and file errors
-        try:
-            with open(sys.argv[1], "r") as input_file:
-                program = input_file.read()
-                print("program: " + program)
-        except FileNotFoundError:
-            print("No such file in path:", sys.argv[1])
-        return program
-
-    else:
-        print("Invalid file :", sys.argv[1])
 
 
-if __name__ == '__main__':
-    data = read_program()
-    lexer = CalcLexer()
-    output_file = "tokens.txt"
-    with open(output_file, "w") as f:
-        for token in lexer.tokenize(data):
-            f.write('{}\n'.format(token.value))
 
 
-#venv\Scripts\python.exe Lexer.py Input.imp
 
 # .* will match any character (including newlines if dotall is used). This is greedy: it matches as much as it can.
 #
