@@ -38,4 +38,34 @@ variable_change_statement(t_var_ch(X)) --> increment_expression(X)_.
 variable_change_statement(t_var_ch(X)) --> decrement_expression(X).
 variable_change_statement(t_var_ch(X, Y, Z)) --> variable_name(X), assignment_operator(Y), expression(Z).
 
+% terminals
+
+variable_type(t_type(int)) --> ['int'].
+variable_type(t_type(float)) --> ['float'].
+variable_type(t_type(bool)) --> ['bool'].
+variable_type(t_type(string)) --> ['string'].
+
+decrement_operator(--) --> ['--'].
+increment_operator(++) --> ['++'].
+
+comparison_operators(<) --> ['<'].
+comparison_operators(>) --> ['>'].
+comparison_operators(<=) --> ['<='].
+comparison_operators(>=) --> ['>='].
+comparison_operators(==) --> ['=='].
+comparison_operators(!=) --> ['!='].
+
+single_quote(\') --> ['\''].
+double_quote(\") --> ['\"'].
+
+boolean_value(true) --> ['true'].
+boolean_value(false) --> ['false'].
+
+assignment_operator(=) --> [‘=’].
+end_of_command(;) --> [‘;’].
+
+and_operator(and) --> ['and'].
+or_operator(or) --> ['or'].
+not_operator(not) --> ['not'].
+
 
