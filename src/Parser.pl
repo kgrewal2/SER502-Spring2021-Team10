@@ -34,7 +34,7 @@ increment_expression(t_inc_expr(X, Y)) --> increment_operator(X), variable_name(
 
 for_loop_command(t_for(X,Y,Z,W)) --> ['for'], ['('], assignment(X), [';'], condition(Y),  [';'], variable_change_statement(Z), [')'], block(W).
 
-variable_change_statement(t_var_ch(X)) --> increment_expression(X)_.
+variable_change_statement(t_var_ch(X)) --> increment_expression(X).
 variable_change_statement(t_var_ch(X)) --> decrement_expression(X).
 variable_change_statement(t_var_ch(X, Y, Z)) --> variable_name(X), assignment_operator(Y), expression(Z).
 
