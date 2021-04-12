@@ -40,32 +40,61 @@ variable_change_statement(t_var_ch(X, Y, Z)) --> variable_name(X), assignment_op
 
 % terminals
 
-variable_type(t_type(int)) --> ['int'].
-variable_type(t_type(float)) --> ['float'].
-variable_type(t_type(bool)) --> ['bool'].
-variable_type(t_type(string)) --> ['string'].
+variable_type(t_type(int)) --> [int].
+variable_type(t_type(float)) --> [float].
+variable_type(t_type(bool)) --> [bool].
+variable_type(t_type(string)) --> [string].
 
-decrement_operator(--) --> ['--'].
-increment_operator(++) --> ['++'].
+decrement_operator(--) --> [--].
+increment_operator(++) --> [++].
 
-comparison_operators(<) --> ['<'].
-comparison_operators(>) --> ['>'].
-comparison_operators(<=) --> ['<='].
-comparison_operators(>=) --> ['>='].
-comparison_operators(==) --> ['=='].
-comparison_operators(!=) --> ['!='].
+comparison_operators(<) --> [<].
+comparison_operators(>) --> [>].
+comparison_operators(<=) --> [<=].
+comparison_operators(>=) --> [>=].
+comparison_operators(==) --> [==].
+comparison_operators(!=) --> [!=].
 
-single_quote(\') --> ['\''].
-double_quote(\") --> ['\"'].
+single_quote(\') --> [\'].
+double_quote(\") --> [\"].
 
-boolean_value(true) --> ['true'].
-boolean_value(false) --> ['false'].
+boolean_value(true) --> [true].
+boolean_value(false) --> [false].
 
-assignment_operator(=) --> [‘=’].
-end_of_command(;) --> [‘;’].
+assignment_operator(=) --> [=].
+end_of_command(;) --> [;].
 
-and_operator(and) --> ['and'].
-or_operator(or) --> ['or'].
-not_operator(not) --> ['not'].
+and_operator(and) --> [and].
+or_operator(or) --> [or].
+not_operator(not) --> [not].
 
+%TEST CASES
+
+?-variable_type(t_type(int), [int, end], [end]).
+?-variable_type(t_type(float), [float, end], [end]).
+?-variable_type(t_type(bool), [bool, end], [end]).
+?-variable_type(t_type(string), [string, end], [end]).
+
+?-decrement_operator((--), [--, end], [end]).
+?-increment-operator((++), [++, end], [end]).
+
+?-comparison_operators((<), [<, end], [end]).
+?-comparison_operators((>), [>, end], [end]).
+?-comparison_operators((<=), [<=, end], [end]).
+?-comparison_operators((>=), [>=, end], [end]).
+?-comparison_operators((==), [==, end], [end]).
+?-comparison_operators((!=), [!=, end], [end]).
+
+?-single_quote((\'), [\', end], [end]).
+?-double_quote((\"), [\", end], [end]).
+
+?-boolean_value((true), [true, end], [end]).
+?-boolean_value((false), [false, end], [end]).
+
+?-assignment_operator((=), [=, end], [end]).
+?-end_of_command((;), [;, end], [end]).
+
+?-and_operator((and), [and, end], [end]).
+?-or_operator((or), [or, end], [end]).
+?-not_operator((not), [not, end], [end]).
 
