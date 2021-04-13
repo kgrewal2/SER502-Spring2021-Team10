@@ -1,5 +1,5 @@
 % Parsing program and block 
-program(t_program(X)) --> command_list(X), [.].
+program(t_program(X)) --> command_list(X).
 block(t_block(X)) --> ['{'], command_list(X), ['}'].  
 
 % Parsing print command
@@ -20,4 +20,4 @@ variable_declaration_command(t_variable_declaration(VT, VN)) --> variable_type(V
 variable_declaration_command(t_variable_declaration(VT, VN, AO, E)) --> variable_type(VT), variable_name(VN), assignment_operator(AO), expression(E), end_of_command.
 
 % Parsing Assignment command
-assignment_command(t_assignment_command(VN, AO, E)) --> variable_name(VN), assignment_operator(AO), expressoion(E), end_of_command. 
+assignment_command(t_assignment_command(VN, AO, E)) --> variable_name(VN), assignment_operator(AO), expression(E), end_of_command. 
