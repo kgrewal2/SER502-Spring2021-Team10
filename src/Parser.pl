@@ -8,6 +8,13 @@ else_part(t_else(ElseBlock)) --> [else], block(ElseBlock);
 elif_part(t_elif(ElifCondtion,ElifBlock)) --> [elif], ['('], condition(ElifCondtion), [')'], block(ElifBlock).
 elif_part(t_elif(ElifCondtion,ElifBlock,ElifCondtion2)) --> [elif], ['('], condition(ElifCondtion), [')'], block(ElifBlock), elif_part(ElifCondtion2).
 
+% For loop
+for_loop_command(t_for_loop (Assignment,ForCondition, VariableChange,ForBlock)) --> [for], [’(’], assignment(Assignment), [’;’], condition(ForCondition), [’;’], variable_change_part(VariableChange),[’)’], block(ForBlock).
+variable_change_part(t_variable_change(X)) --> increment_expression(x).
+variable_change_part(t_variable_change(X)) --> decrement_expression(X).
+variable_change_part(t_variable_change(X)) --> assignment_expression(X).
+
+
 ternary_expression(t_ternary_expression(Condition, TrueExpression, FalseExpression)) -->
     ['('], condition(Condition),  [')'], ['?'], expression(TrueExpression), [':'], expression(FalseExpression).
 
