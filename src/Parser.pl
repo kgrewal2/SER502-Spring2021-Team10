@@ -18,14 +18,17 @@ not_operator(t_bool_not) --> [not].
 operator(BooleanOperator) --> boolean_operator(BooleanOperator).
 operator(t_operator(Operator), [Operator | Tail], Tail) :- member(Operator, [+, -, *, /]).
 
-boolean_value(True) --> [True].
-boolean_value(False) --> [False].
+variable_name(t_variable_name(VariableName), [VariableName | Tail], Tail) :-
+    atom(VariableName).
 
 float_value(Value, [Value | Tail], Tail) :- float(Value).
 
 integer_value(Value, [Value | Tail], Tail) :- integer(Value).
 
 string_value(Value, [Value | Tail], Tail) :- string(Value).
+
+boolean_value(True) --> [True].
+boolean_value(False) --> [False].
 
 % TEST CODE
 
@@ -51,8 +54,11 @@ string_value(Value, [Value | Tail], Tail) :- string(Value).
 ?- operator(t_operator(*), [*, end], [end]).
 ?- operator(t_operator(/), [/, end], [end]).
 
-?- boolean_value(True, [True, False], [False]).
-?- boolean_value(False, [False, True], [True]).
+?- variable_name(t_variable_name(variable_name), [variable_name, end], [end]). % Variable name can contain lower case, upper case and underscores
+?- variable_name(t_variable_name(variableName), [variableName, end], [end]).
+?- variable_name(t_variable_name(variable), [variable, end], [end]).
+?- not(variable_name(t_variable_name(Variable_name), [Variable_name, end], [end])). % Variable name should not start with capital letter
+?- not(variable_name(t_variable_name(_variable_name), [_variable_name, end], [end])). % Variable name should not start with underscore
 
 ?- float_value(12.3, [12.3], []).
 
@@ -61,3 +67,6 @@ string_value(Value, [Value | Tail], Tail) :- string(Value).
 ?- string_value("Hello''", ["Hello''", 12], [12]).
 ?- string_value("Hello", ["Hello", 12], [12]).
 ?- string_value("Hello \"", ["Hello \"", 12], [12]).
+
+?- boolean_value(True, [True, False], [False]).
+?- boolean_value(False, [False, True], [True]).
