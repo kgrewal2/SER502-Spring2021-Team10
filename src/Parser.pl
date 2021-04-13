@@ -27,14 +27,14 @@ integer_value(Value, [Value | Tail], Tail) :- integer(Value).
 
 string_value(Value, [Value | Tail], Tail) :- string(Value).
 
-boolean_value(True) --> [True].
-boolean_value(False) --> [False].
+boolean_value(true) --> [true].
+boolean_value(false) --> [false].
 
 % TEST CODE
 
 ?- value(t_float_value(1.23), [1.23, 2], [2]).
 ?- value(t_integer_value(1), [1, 2.2], [2.2]).
-?- value(t_boolean_value(True), [True, 2], [2]).
+?- value(t_boolean_value(true), [true, 2], [2]).
 ?- value(t_string_value("Hello''"), ["Hello''", 2], [2]).
 ?- value(t_string_value("Hello"), ["Hello", 2], [2]).
 ?- value(t_string_value("Hello\""), ["Hello\"", 2], [2]).
@@ -68,5 +68,5 @@ boolean_value(False) --> [False].
 ?- string_value("Hello", ["Hello", 12], [12]).
 ?- string_value("Hello \"", ["Hello \"", 12], [12]).
 
-?- boolean_value(True, [True, False], [False]).
-?- boolean_value(False, [False, True], [True]).
+?- boolean_value(true, [true, false], [false]).
+?- boolean_value(false, [false, true], [true]).
