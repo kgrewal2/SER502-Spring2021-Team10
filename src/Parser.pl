@@ -1,3 +1,13 @@
+
+% If, If-Else, If-Elif-Else
+if_command(t_if_command(IfCondtion,IfBlock)) --> if_part(IfCondtion,IfBlock).
+if_elif_else_command(t_if_elif_else_command(IfCondtion,IfBlock, ElifCondtion, ElifBlock, ElseBlock)) --> if_part(IfCondtion, IfBlock), elif_part(ElifCondtion, ElifBlock), else_part(ElseBlock).
+if_else_command(t_if_else(IfCondtion,IfBlock,ElseBlock)) --> if_part(IfCondtion,IfBlock), else_part(ElseBlock).
+if_part(t_if(IfCondtion,IfBlock)) --> [if], ['('], condition(IfCondtion), [')'], block(IfBlock).
+else_part(t_else(ElseBlock)) --> [else], block(ElseBlock);
+elif_part(t_elif(ElifCondtion,ElifBlock)) --> [elif], ['('], condition(ElifCondtion), [')'], block(ElifBlock).
+elif_part(t_elif(ElifCondtion,ElifBlock,ElifCondtion2)) --> [elif], ['('], condition(ElifCondtion), [')'], block(ElifBlock), elif_part(ElifCondtion2).
+
 ternary_expression(t_ternary_expression(Condition, TrueExpression, FalseExpression)) -->
     ['('], condition(Condition),  [')'], ['?'], expression(TrueExpression), [':'], expression(FalseExpression).
 
