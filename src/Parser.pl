@@ -3,7 +3,7 @@
 
 :- table expr/3, term/3.
 
-expression(t_assign_multiple_expr(X, Y)) --> identifier(X), [:=], expression(Y).
+expression(t_assignment_expr(X, Y, Z)) --> variable_name(X), assignment_operator(Y), expression(Z).
 expression(X) --> expr(X).
 
 expr(t_add(X, Y)) --> expr(X), [+], term(Y).
@@ -29,14 +29,6 @@ decrement_expression(t_dec_expr(X, Y)) --> variable_name(X), decrement_operator(
 decrement_expression(t_dec_expr(X, Y)) --> decrement_operator(X), variable_name(Y).
 increment_expression(t_inc_expr(X, Y)) --> variable_name(X), increment_operator(Y).
 increment_expression(t_inc_expr(X, Y)) --> increment_operator(X), variable_name(Y).
-
-% for_loop_command, variable_change_part
-
-for_loop_command(t_for(X,Y,Z,W)) --> ['for'], ['('], assignment(X), [';'], condition(Y),  [';'], variable_change_statement(Z), [')'], block(W).
-
-variable_change_statement(t_var_ch(X)) --> increment_expression(X).
-variable_change_statement(t_var_ch(X)) --> decrement_expression(X).
-variable_change_statement(t_var_ch(X, Y, Z)) --> variable_name(X), assignment_operator(Y), expression(Z).
 
 % terminals
 
