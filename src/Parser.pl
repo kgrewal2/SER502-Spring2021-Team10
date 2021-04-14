@@ -23,7 +23,7 @@ integer(digit(X)) --> [X], {number(X)}.
 
 variable_name(var(X)) --> [X],{atom(X)}.
 
-condition(t_cond(X, Y, Z)) --> variable_name(X), comparison_operators(Y), expression(Z).
+condition(t_cond(X, Y, Z)) --> expression(X), comparison_operators(Y), expression(Z).
 
 decrement_expression(t_dec_expr(X, Y)) --> variable_name(X), decrement_operator(Y).
 decrement_expression(t_dec_expr(X, Y)) --> decrement_operator(X), variable_name(Y).
