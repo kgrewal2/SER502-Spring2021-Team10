@@ -3,18 +3,18 @@
 
 :- table expr/3, term/3.
 
-expression(t_assignment_expr(X, Y, Z)) --> variable_name(X), assignment_operator(Y), expression(Z).
+expression(t_assignment_expr(X)) --> assignment_expression(X).
 expression(X) --> expr(X).
 
 expr(t_add(X, Y)) --> expr(X), [+], term(Y).
 expr(t_sub(X, Y)) --> expr(X), [-], term(Y).
 expr(X) --> term(X).
 
-term(t_multiply(X, Y)) --> term(X), [*], bracket(Y).
-term(t_divide(X, Y)) --> term(X), [/], bracket(Y).
-term(X) --> bracket(X).
+term(t_multiply(X, Y)) --> term(X), [*], high_precedence_expression(Y).
+term(t_divide(X, Y)) --> term(X), [/], high_precedence_expression(Y).
+term(X) --> high_precedence_expression(X).
 
-bracket(t_bracket(X)) --> ['('], expression(X), [')'].
+high_precedence_expression(t_high_precedence(X)) --> ['('], expression(X), [')'].
 
 bracket(X) --> variable_name(X).
 bracket(X) --> integer(X).
