@@ -16,8 +16,8 @@ term(X) --> high_precedence_expression(X).
 
 high_precedence_expression(t_high_precedence(X)) --> ['('], expression(X), [')'].
 
-bracket(X) --> variable_name(X).
-bracket(X) --> integer(X).
+high_precedence_expression(X) --> variable_name(X).
+high_precedence_expression(X) --> integer(X).
 
 integer(digit(X)) --> [X], {number(X)}.
 
