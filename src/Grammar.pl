@@ -1,0 +1,125 @@
+%%%%%%%%%%%%%%%%%
+% NON-TERMINALS %
+%%%%%%%%%%%%%%%%%
+
+% Start Symbol
+program --> command_list.
+
+block --> ['{'], command_list, ['}'].
+
+command_list --> command, command_list.
+command_list --> command_without_block, command_list.
+command_list --> command.
+command_list --> command_without_block.
+
+% Single Line Commands
+command_without_block --> print_command.
+command_without_block --> assignment_command.
+command_without_block --> variable_declaration_command.
+
+% Multi Line Commands
+command --> for_loop_command.
+command --> while_loop_command.
+command --> for_enhanced_command.
+command --> if_command.
+command --> if_elif_else_command.
+command --> if_else_command.
+
+if_command --> if_part.
+if_elif_else_command --> if_part, elif_part, else_part.
+if_else_command --> if_part, else_part.
+
+if_part --> ['if'], ['('], condition, [')'], block.
+else_part --> ['else'], block.
+elif_part --> ['elif'], ['('], condition, [')'], block.
+elif_part --> ['elif'], ['('], condition, [')'], block, elif_command.
+
+while_loop_command --> ['while'], ['('], condition, [')'], block.
+
+for_enhanced_command --> ['for'], variable_name, ['in'], ['range'], ['('], range_value, [','], range_value, [')'], block.
+
+range_value --> variable_name | integer.
+
+for_loop_command --> ['for'], ['('], assignment, [';'], condition, [';'], variable_change_part, [')'], block.
+
+variable_change_part --> increment_expression.
+variable_change_part --> decrement_expression.
+variable_change_part --> variable_name, assignment_operator, expression.
+
+condition --> expression, comparison_operators, expression.
+
+decrement_expression --> variable_name, decrement_operator.
+decrement_expression --> decrement_operator, variable_name.
+increment_expression --> variable_name, increment_operator.
+increment_expression --> increment_operator, variable_name.
+
+print_command --> ['print'], ['('], expression, [')'], end_of_command.
+
+expression --> value, operator, expression.
+expression --> ['('], expression, [')'], operator, expression.
+expression --> value.
+expression --> ternary_expression.
+
+ternary_expression --> ['('], condition, [')'], ['?'], expression, [':'], expression.
+
+value --> float | integer | boolean_value | string_value | variable_name.
+
+boolean_operators --> and_operator | or_operator | not_operator.
+
+operators --> ['+'] | ['-'] | ['*'] | ['/'] | boolean_operators.
+
+assignment_command --> variable_name, assignment_operator, expression, end_of_command.
+
+variable_declaration_command --> variable_type, variable_name, end_of_command.
+variable_declaration_command --> variable_type, variable_name, assignment_operator, expression, end_of_command.
+
+variable_name --> lower_case, variable_name.
+variable_name --> variable_name, upper_case.
+variable_name --> variable_name, upper_case, variable_name.
+variable_name --> variable_name, ['_'], variable_name.
+variable_name --> lower_case.
+
+string_value --> single_quote, character_phrase, single_quote.
+string_value --> double_quote, character_phrase, double_quote.
+
+character_phrase --> character, character_phrase.
+character_phrase --> character.
+
+character --> lower_case | upper_case | digit | symbol.
+
+float --> integer, ['.'], integer.
+float --> integer.
+
+integer --> digit, integer.
+integer --> digit.
+
+%%%%%%%%%%%%%
+% TERMINALS %
+%%%%%%%%%%%%%
+variable_type --> ['int'] | ['float'] | ['bool'] | ['string'].
+
+decrement_operator --> ['--'].
+increment_operator --> ['++'].
+
+comparison_operators --> ['<'], ['>'], ['<='], ['>='], ['=='], ['!='].
+
+single_quote --> ['\''].
+double_quote --> ['\"'].
+
+lower_case --> ['a'] | ['b'] | ['c'] | ['d'] | ['e'] | ['f'] | ['g'] | ['h'] | ['i'] | ['j'] | ['k'] | ['l'] | ['m'] | ['n'] | ['o'] | ['p'] | ['q'] | ['r'] | ['s'] | ['t'] | ['u'] | ['v'] | ['w'] | ['x'] | ['y'] | ['z'].
+
+upper_case --> ['A'] | ['B'] | ['C'] | ['D'] | ['E'] | ['F'] | ['G'] | ['H'] | ['I'] | ['J'] | ['K'] | ['L'] | ['M'] | ['N'] | ['O'] | ['P'] | ['Q'] | ['R'] | ['S'] | ['T'] | ['U'] | ['V'] | ['W'] | ['X'] | ['Y'] | ['Z'].
+
+symbol --> [' '] | ['!'] | ['\"'] | ['#'] | ['$'] | ['%'] | ['&'] | ['\''] | ['('] | [')'] | ['*'] | ['+'] | [','] | ['-'] | ['.'] | ['/'] | [':'] | [';'] | ['<'] | ['='] | ['>'] | ['?'] | ['@'] | ['['] | ['\\'] | [']'] | ['^'] | ['_'] | ['`'] | ['{'] | ['|'] | ['}'] | ['~'].
+
+digit --> ['0'] | ['1'] | ['2'] | ['3'] | ['4'] | ['5'] | ['6'] | ['7'] | ['8'] | ['9'].
+
+boolean_value --> ['True'].
+boolean_value --> ['False'].
+
+assignment_operator --> [‘=’].
+end_of_command --> [‘;’].
+
+and_operator --> ['and'].
+or_operator --> ['or'].
+not_operator --> ['not'].
