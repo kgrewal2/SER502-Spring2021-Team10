@@ -1,18 +1,18 @@
 program(t_program(X)) --> command_list(X).
-block(t_block(X)) --> ['{'], command_list(X), ['}'].  
+block(t_block(X)) --> ['{'], command_list(X), ['}'].
 
-print_command(t_print_command(X)) --> ['print'], ['('], expression(X), [')'], end_of_command. 
+print_command(t_print_command(X)) --> ['print'], ['('], expression(X), [')'], end_of_command.
 
 while_loop_command(t_while_command(C, B)) --> ['while'], ['('], condition(C), [')'], block(B).
 
-for_enhanced_command(t_enhanced_for_command(VN, RV1, RV2, B)) --> 
+for_enhanced_command(t_enhanced_for_command(VN, RV1, RV2, B)) -->
     ['for'], variable_name(VN), ['in'], ['range'], ['('], range_value(RV1), [','], range_value(RV2), [')'], block(B).
 
 range_value(t_range_value(VN)) --> variable_name(VN).
 range_value(t_range_value(I)) --> integer(I).
 
 variable_declaration_command(t_variable_declaration_command(VT, VN)) --> variable_type(VT), variable_name(VN), end_of_command.
-variable_declaration_command(t_variable_declaration_command(VT, VN, AO, E)) --> 
+variable_declaration_command(t_variable_declaration_command(VT, VN, AO, E)) -->
     variable_type(VT), variable_name(VN), assignment_operator(AO), expression(E), end_of_command.
 
 assignment_command(t_assignment_command(VN, AO, E)) --> variable_name(VN), assignment_operator(AO), expression(E), end_of_command.
@@ -39,8 +39,6 @@ high_precedence_expression(X) --> integer(X).
 
 integer(digit(X)) --> [X], {number(X)}.
 
-variable_name(var(X)) --> [X],{atom(X)}.
-
 condition(t_cond(X, Y, Z)) --> expression(X), comparison_operators(Y), expression(Z).
 
 decrement_expression(t_dec_expr(X, Y)) --> variable_name(X), decrement_operator(Y).
@@ -55,19 +53,15 @@ variable_type(t_type(float)) --> [float].
 variable_type(t_type(bool)) --> [bool].
 variable_type(t_type(string)) --> [string].
 
-decrement_operator(--) --> [--].
-increment_operator(++) --> [++].
+decrement_operator(t_decrement) --> [--].
+increment_operator(t_increment) --> [++].
 
-comparison_operators(<) --> [<].
-comparison_operators(>) --> [>].
-comparison_operators(<=) --> [<=].
-comparison_operators(>=) --> [>=].
-comparison_operators(==) --> [==].
-comparison_operators(!=) --> [!=].
-
-single_quote(\') --> [\'].
-double_quote(\") --> [\"].
-======= 
+comparison_operators(t_lt) --> [<].
+comparison_operators(t_gt) --> [>].
+comparison_operators(t_le) --> [<=].
+comparison_operators(t_ge) --> [>=].
+comparison_operators(t_equal) --> [==].
+comparison_operators(t_not_equal) --> ['!='].
 
 ternary_expression(t_ternary_expression(Condition, TrueExpression, FalseExpression)) -->
     ['('], condition(Condition),  [')'], ['?'], expression(TrueExpression), [':'], expression(FalseExpression).
@@ -104,10 +98,6 @@ boolean_value(false) --> [false].
 assignment_operator(=) --> [=].
 end_of_command(;) --> [;].
 
-and_operator(and) --> [and].
-or_operator(or) --> [or].
-not_operator(not) --> [not].
-
 %TEST CASES
 
 ?-variable_type(t_type(int), [int, end], [end]).
@@ -115,18 +105,15 @@ not_operator(not) --> [not].
 ?-variable_type(t_type(bool), [bool, end], [end]).
 ?-variable_type(t_type(string), [string, end], [end]).
 
-?-decrement_operator((--), [--, end], [end]).
-?-increment-operator((++), [++, end], [end]).
+?-decrement_operator(t_decrement, [--, end], [end]).
+?-increment_operator(t_increment, [++, end], [end]).
 
-?-comparison_operators((<), [<, end], [end]).
-?-comparison_operators((>), [>, end], [end]).
-?-comparison_operators((<=), [<=, end], [end]).
-?-comparison_operators((>=), [>=, end], [end]).
-?-comparison_operators((==), [==, end], [end]).
-?-comparison_operators((!=), [!=, end], [end]).
-
-?-single_quote((\'), [\', end], [end]).
-?-double_quote((\"), [\", end], [end]).
+?-comparison_operators(t_lt ,  [<  ,  end] ,  [end]).
+?-comparison_operators(t_gt ,  [>  ,  end] ,  [end]).
+?-comparison_operators(t_le ,  [<= ,  end] ,  [end]).
+?-comparison_operators(t_ge ,  [>= ,  end] ,  [end]).
+?-comparison_operators(t_equal,  [== ,  end] ,  [end]).
+?-comparison_operators(t_not_equal,  ['!=' ,  end] ,  [end]).
 
 ?-boolean_value((true), [true, end], [end]).
 ?-boolean_value((false), [false, end], [end]).
@@ -134,10 +121,6 @@ not_operator(not) --> [not].
 ?-assignment_operator((=), [=, end], [end]).
 ?-end_of_command((;), [;, end], [end]).
 
-?-and_operator((and), [and, end], [end]).
-?-or_operator((or), [or, end], [end]).
-?-not_operator((not), [not, end], [end]).
-=======
 % TEST CODE
 
 ?- value(t_float_value(1.23), [1.23, 2], [2]).
