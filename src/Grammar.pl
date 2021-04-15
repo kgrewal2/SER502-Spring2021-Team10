@@ -30,7 +30,7 @@ if_elif_else_command --> if_part, elif_part, else_part.
 if_else_command --> if_part, else_part.
 
 if_part --> ['if'], ['('], condition, [')'], block.
-else_part --> ['else'], ['('], condition, [')'], block.
+else_part --> ['else'], block.
 elif_part --> ['elif'], ['('], condition, [')'], block.
 elif_part --> ['elif'], ['('], condition, [')'], block, elif_command.
 
