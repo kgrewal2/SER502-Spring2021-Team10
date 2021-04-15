@@ -6,8 +6,7 @@ print_command(t_print_command(X)) --> ['print'], ['('], expression(X), [')'], en
 while_loop_command(t_while_command(C, B)) --> ['while'], ['('], condition(C), [')'], block(B).
 
 for_enhanced_command(t_enhanced_for_command(VN, RV1, RV2, B)) -->
-    ['for'], variable_name(VN), ['in'], ['range'], ['('], range_value(RV1), [','], range_value(RV2), [')'], block(B).
-
+    ['for'], variable_name(VN), ['in'], ['range'], ['('], range_value(RV1), [', '], range_value(RV2), [')'], block(B).
 
 % Command, CommandList
 command(t_print_command(C)) --> print_command(C).
@@ -21,21 +20,19 @@ command(t_if_elif_else_command(C)) --> if_elif_else_command(C).
 command(t_if_else_command(C)) --> if_else_command(C).
 
 % If, If-Else, If-Elif-Else
-if_command(t_if_command(IfCondtion,IfBlock)) --> if_part(IfCondtion,IfBlock).
-if_elif_else_command(t_if_elif_else_command(IfCondtion,IfBlock, ElifCondtion, ElifBlock, ElseBlock)) --> if_part(IfCondtion, IfBlock), elif_part(ElifCondtion, ElifBlock), else_part(ElseBlock).
-if_else_command(t_if_else(IfCondtion,IfBlock,ElseBlock)) --> if_part(IfCondtion,IfBlock), else_part(ElseBlock).
-if_part(t_if(IfCondtion,IfBlock)) --> [if], ['('], condition(IfCondtion), [')'], block(IfBlock).
-else_part(t_else(ElseBlock)) --> [else], block(ElseBlock);
-elif_part(t_elif(ElifCondtion,ElifBlock)) --> [elif], ['('], condition(ElifCondtion), [')'], block(ElifBlock).
-elif_part(t_elif(ElifCondtion,ElifBlock,ElifCondtion2)) --> [elif], ['('], condition(ElifCondtion), [')'], block(ElifBlock), elif_part(ElifCondtion2).
+if_command(t_if_command(IfCondtion, IfBlock)) --> if_part(IfCondtion, IfBlock).
+if_elif_else_command(t_if_elif_else_command(IfCondtion, IfBlock, ElifCondtion, ElifBlock, ElseBlock)) --> if_part(IfCondtion, IfBlock), elif_part(ElifCondtion, ElifBlock), else_part(ElseBlock).
+if_else_command(t_if_else(IfCondtion, IfBlock, ElseBlock)) --> if_part(IfCondtion, IfBlock), else_part(ElseBlock).
+if_part(t_if(IfCondtion, IfBlock)) --> [if], ['('], condition(IfCondtion), [')'], block(IfBlock).
+else_part(t_else(ElseBlock)) --> [else], block(ElseBlock).
+elif_part(t_elif(ElifCondtion, ElifBlock)) --> [elif], ['('], condition(ElifCondtion), [')'], block(ElifBlock).
+elif_part(t_elif(ElifCondtion, ElifBlock, ElifCondtion2)) --> [elif], ['('], condition(ElifCondtion), [')'], block(ElifBlock), elif_part(ElifCondtion2).
 
 % For loop
-for_loop_command(t_for_loop (Assignment,ForCondition, VariableChange,ForBlock)) --> [for], [’(’], assignment(Assignment), [’;’], condition(ForCondition), [’;’], variable_change_part(VariableChange),[’)’], block(ForBlock).
-variable_change_part(t_variable_change(X)) --> increment_expression(x).
+for_loop_command(t_for_loop(Assignment, ForCondition, VariableChange, ForBlock)) --> [for], ['('], assignment(Assignment), [';'], condition(ForCondition), [';'], variable_change_part(VariableChange), [')'], block(ForBlock).
+variable_change_part(t_variable_change(X)) --> increment_expression(X).
 variable_change_part(t_variable_change(X)) --> decrement_expression(X).
 variable_change_part(t_variable_change(X)) --> assignment_expression(X).
-
-
 
 range_value(t_range_value(VN)) --> variable_name(VN).
 range_value(t_range_value(I)) --> integer(I).
@@ -137,8 +134,8 @@ end_of_command(;) --> [;].
 ?-decrement_operator(t_decrement, [--, end], [end]).
 ?-increment_operator(t_increment, [++, end], [end]).
 
-?-comparison_operators(t_lt ,  [<  ,  end] ,  [end]).
-?-comparison_operators(t_gt ,  [>  ,  end] ,  [end]).
+?-comparison_operators(t_lt ,  [< ,  end] ,  [end]).
+?-comparison_operators(t_gt ,  [> ,  end] ,  [end]).
 ?-comparison_operators(t_le ,  [<= ,  end] ,  [end]).
 ?-comparison_operators(t_ge ,  [>= ,  end] ,  [end]).
 ?-comparison_operators(t_equal,  [== ,  end] ,  [end]).
