@@ -1,4 +1,5 @@
 :- table expression_level_1/3, expression_level_2/3, expression_level_3/3.
+% :- use_rendering(svgtree).
 
 % START SYMBOL
 program(t_program(P)) -->
@@ -144,6 +145,7 @@ assignment_expression(t_assignment_expression(Name, Value)) -->
     assignment_operator(_),
     value(Value).
 
+% NOT TESTED
 value(Variable) -->
     integer_value(Variable) |
     float_value(Variable) |
@@ -165,7 +167,8 @@ variable_name(t_variable_name(Variable), [Variable | Tail], Tail) :-
 
 not_keyword(Variable) :-
     not(member(Variable, [int, float, bool, string, true, false, for,
-    if, elif, else, while, range, and, or, not])).
+    if, elif, else, while, range, and, or, not, <, >, <=, >=, ==,
+                           '!=', ++, --, +, -, *, /])).
 
 variable_type(t_variable_type(Head), [Head | T], T) :-
     member(Head, [int, float, bool, string]).
@@ -192,4 +195,66 @@ parse(T, L) :- assignment_command(T, L, []);assignment_expression(T, L, []);assi
 % TESTING %
 %%%%%%%%%%%
 
-?- T = t_boolean_operator(and), L = [and], parse(T, L).
+% BOOLEAN OPERATOR
+?- parse(t_boolean_operator(and) , [and]).
+?- parse(t_boolean_operator(or)  , [or]).
+?- parse(t_boolean_operator(not) , [not]).
+
+% END OF COMMAND
+?- parse(t_end_of_command, [;]).
+
+% ASSIGNMENT OPERATOR
+?- parse(t_assignment_operator, [=]).
+
+% VARIABLE VALUE
+?- parse(t_boolean(true)                          , [true]).
+?- parse(t_boolean(false)                         , [false]).
+?- parse(t_string("This is a string with \" '' ") , ["This is a string with \" '' "]).
+?- parse(t_float(12.3)                            , [12.3]).
+?- parse(t_integer(12)                            , [12]).
+
+% COMPARISON OPERATOR
+?- parse(t_comparison_operator(<)    , [<]).
+?- parse(t_comparison_operator(>)    , [>]).
+?- parse(t_comparison_operator(>=)   , [>=]).
+?- parse(t_comparison_operator(<=)   , [<=]).
+?- parse(t_comparison_operator('!=') , ['!=']).
+
+% VARIABLE TYPE
+?- parse(t_variable_type(int)    , [int]).
+?- parse(t_variable_type(float)  , [float]).
+?- parse(t_variable_type(bool)   , [bool]).
+?- parse(t_variable_type(string) , [string]).
+
+% VARIABLE NAME
+?- parse(t_variable_name(variableName)  , [variableName]).
+?- parse(t_variable_name(variable_name) , [variable_name]).
+
+% INCREMENT AND DECREMENT OPERATORS
+?- parse(t_post_increment(t_variable_name(x)) , [x  , ++]).
+?- parse(t_pre_increment(t_variable_name(x))  , [++ , x]).
+?- parse(t_post_decrement(t_variable_name(x)) , [x  , --]).
+?- parse(t_pre_decrement(t_variable_name(x))  , [-- , x]).
+
+
+% ASSIGNMENT EXPRESSION
+?- parse(t_assignment_expression(t_variable_name(x) , t_string("String")) , [x , = , "String"]).
+?- parse(t_assignment_expression(t_variable_name(x) , t_integer(12))      , [x , = , 12]).
+?- parse(t_assignment_expression(t_variable_name(x) , t_float(12.3))      , [x , = , 12.3]).
+?- parse(t_assignment_expression(t_variable_name(x) , t_boolean(true))    , [x , = , true]).
+?- parse(t_assignment_expression(t_variable_name(x) , t_boolean(false))   , [x , = , false]).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
