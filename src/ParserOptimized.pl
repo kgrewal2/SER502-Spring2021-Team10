@@ -41,15 +41,21 @@ if_command(t_if_command(IfTree, ElseTree)) -->
 % IF, ELIF, ELSE - PARTS
 if_part(t_if(Condition, Block)) -->
     [if],
+    ['('],
     condition(Condition),
+    [')'],
     block(Block).
 elif_part(t_elif(Condition, Block)) -->
     [elif],
+    ['('],
     condition(Condition),
+    [')'],
     block(Block).
 elif_part(t_elif(Condition, Block, ElifPart)) -->
     [elif],
+    ['('],
     condition(Condition),
+    [')'],
     block(Block),
     elif_part(ElifPart).
 else_part(t_else(Block)) -->
@@ -237,6 +243,11 @@ parse(T, L) :- assignment_command(T, L, []);assignment_expression(T, L, []);assi
 ?- parse(t_post_decrement(t_variable_name(x)) , [x , --]).
 ?- parse(t_pre_decrement(t_variable_name(x)) , [-- , x]).
 
+?- value(t_float(12.3), [12.3], []).
+?- value(t_integer(12), [12], []).
+?- value(t_string("Hello String"), ["Hello String"], []).
+?- value(t_boolean(true), [true], []).
+
 % ASSIGNMENT EXPRESSION
 ?- parse(t_assignment_expression(t_variable_name(x) , t_expression(t_string("String"))) , [x , = , "String"]).
 ?- parse(t_assignment_expression(t_variable_name(x) , t_expression(t_integer(12)))   , [x , = , 12]).
@@ -281,6 +292,24 @@ parse(T, L) :- assignment_command(T, L, []);assignment_expression(T, L, []);assi
 % FOR COMMAND
 ?- parse( t_for_loop_command(t_assignment_expression(t_variable_name(i), t_expression(t_integer(0))), t_condition(t_expression(t_variable_name(i)), t_comparison_operator((<)), t_expression(t_add(t_integer(3), t_integer(1)))), t_post_increment(t_variable_name(i)), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), [for, '(', i, =, 0, ;, i, <, 3, +, 1, ;, i, ++, ')', '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}']).
 
+% IF COMMAND
+?- parse(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3))))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}']).
 
+% IF ELIF ELSE COMMAND
+?- parse( t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_elif(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((==)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', elif, '(', x, ==, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}']).
 
+% IF ELIF ELIF ELSE COMMAND
+?- parse( t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_elif(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((==)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3))))))), t_elif(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((==)), t_expression(t_integer(3))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3))))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', elif, '(', x, ==, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', elif, '(', x, ==, 3, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}']).
+
+% IF ELSE COMMAND
+?- parse( t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}']).
+
+% COMMAND LIST
+?- command_list(t_command_list(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), t_command(t_print(t_expression(t_add(t_integer(2), t_integer(1)))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}', print, '(', 2, +, 1, ')', ;], []).
+
+% BLOCK
+?- block(t_block(t_command_list(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), t_command(t_print(t_expression(t_add(t_integer(2), t_integer(1))))))), ['{', if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}', print, '(', 2, +, 1, ')', ;, '}'], []).
+
+% PROGRAM
+?- program( t_program(t_command_list(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), t_command(t_print(t_expression(t_add(t_integer(2), t_integer(1))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}', print, '(', 2, +, 1, ')', ;], []).
 
