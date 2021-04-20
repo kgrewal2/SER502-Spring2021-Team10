@@ -5,6 +5,10 @@ Main Project Repository for SER502 (Emerging Languages and Programming Paradigms
 - Linux
 
 ## Tools Used
+### For Lexer
+- Python
+- [SLY (Sly Lex Yacc)](https://sly.readthedocs.io/en/latest/sly.html)
+### For Parser and Evaluator
 - Prolog
 
 ## Installing Prolog
