@@ -270,7 +270,7 @@ parse(T, L) :- assignment_command(T, L, []);assignment_expression(T, L, []);assi
 ?- parse(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(12), t_integer(12)))), [ x, =, 12, +, 12, ;]).
 
 % PRINT COMMAND
-parse(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), [print, '(', 2, +, 1, ')', ;]).
+?- parse(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), [print, '(', 2, +, 1, ')', ;]).
 
 % FOR ENHANCED COMMAND
 ?- parse( t_for_enhanced_command(t_variable_name(i), t_expression(t_add(t_integer(2), t_integer(2))), t_expression(t_integer(3)), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), [for, i, in, range, '(', 2, +, 2, ;, 3, ')', '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}']).
