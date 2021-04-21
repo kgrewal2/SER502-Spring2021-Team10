@@ -2,6 +2,11 @@
 lookup(Id, [(Id, Val) | _], Val).
 lookup(Id, [_|T], Val) :- lookup(Id, T, Val).
 
+% Environment update
+update(Id, Val, [], [(Id,Val)]).
+update(Id, Val, [(Id,_)|T], [(Id,Val)|T]).
+update(Id, Val, [H|T], [H| Env]):- H \= (Id, _), update(Id, Val, T, Env).
+
 % Evaluating program
 eval_program(t_program(P)) :- eval_command_list(CL, [], _).
 
