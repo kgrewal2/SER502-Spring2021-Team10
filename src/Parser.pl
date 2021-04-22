@@ -1,182 +1,311 @@
-program(t_program(X)) --> command_list(X).
-block(t_block(X)) --> ['{'], command_list(X), ['}'].  
+:- table expression_level_1/3, expression_level_2/3, expression_level_3/3.
 
-print_command(t_print_command(X)) --> ['print'], ['('], expression(X), [')'], end_of_command. 
+% START SYMBOL
+program(t_program(P)) -->
+    command_list(P).
 
-while_loop_command(t_while_command(C, B)) --> ['while'], ['('], condition(C), [')'], block(B).
+% BLOCK
+block(t_block(CommandList)) -->
+    ['{'],
+    command_list(CommandList),
+    ['}'].
 
-for_enhanced_command(t_enhanced_for_command(VN, RV1, RV2, B)) --> 
-    ['for'], variable_name(VN), ['in'], ['range'], ['('], range_value(RV1), [','], range_value(RV2), [')'], block(B).
+% COMMAND LIST
+command_list(t_command_list(Command, CommandList)) -->
+    command(Command),
+    command_list(CommandList).
+command_list(t_command(Command)) -->
+    command(Command).
 
-range_value(t_range_value(VN)) --> variable_name(VN).
-range_value(t_range_value(I)) --> integer(I).
+% COMMAND
+command(C) -->
+    assignment_command(C) |
+    for_enhanced_command(C) |
+    for_loop_command(C) |
+    if_command(C) |
+    print_command(C) |
+    variable_declaration_command(C) |
+    while_loop_command(C).
 
-variable_declaration_command(t_variable_declaration_command(VT, VN)) --> variable_type(VT), variable_name(VN), end_of_command.
-variable_declaration_command(t_variable_declaration_command(VT, VN, AO, E)) --> 
-    variable_type(VT), variable_name(VN), assignment_operator(AO), expression(E), end_of_command.
+% IF, ELIF, ELSE - COMMAND
+if_command(t_if_command(IfTree)) -->
+    if_part(IfTree).
+if_command(t_if_command(IfTree, ElifTree, ElseTree)) -->
+    if_part(IfTree),
+    elif_part(ElifTree),
+    else_part(ElseTree).
+if_command(t_if_command(IfTree, ElseTree)) -->
+    if_part(IfTree),
+    else_part(ElseTree).
 
-assignment_command(t_assignment_command(VN, AO, E)) --> variable_name(VN), assignment_operator(AO), expression(E), end_of_command.
+% IF, ELIF, ELSE - PARTS
+if_part(t_if(Condition, Block)) -->
+    [if],
+    ['('],
+    condition(Condition),
+    [')'],
+    block(Block).
+elif_part(t_elif(Condition, Block)) -->
+    [elif],
+    ['('],
+    condition(Condition),
+    [')'],
+    block(Block).
+elif_part(t_elif(Condition, Block, ElifPart)) -->
+    [elif],
+    ['('],
+    condition(Condition),
+    [')'],
+    block(Block),
+    elif_part(ElifPart).
+else_part(t_else(Block)) -->
+    [else],
+    block(Block).
 
-% expression, decrement_expression, increment_expression, condition
+print_command(t_print(Expression)) --> [print], ['('], expression(Expression), [')'], end_of_command(_).
 
-:- table expr/3, term/3.
+variable_declaration_command(t_variable_declaration_command(Type, Name)) -->
+    variable_type(Type),
+    variable_name(Name),
+    end_of_command(_).
+variable_declaration_command(t_variable_declaration_command(Type, Name, Expression)) -->
+    variable_type(Type),
+    variable_name(Name),
+    assignment_operator(_),
+    expression(Expression),
+    end_of_command(_).
 
-expression(t_assignment_expr(X)) --> assignment_expression(X).
-expression(X) --> expr(X).
+assignment_command(Expression) -->
+    assignment_expression(Expression),
+    end_of_command(_).
 
-expr(t_add(X, Y)) --> expr(X), [+], term(Y).
-expr(t_sub(X, Y)) --> expr(X), [-], term(Y).
-expr(X) --> term(X).
+for_loop_command(t_for_loop_command(Assignment, Condition, VariableChangePart, Block)) -->
+    [for],
+    ['('],
+    assignment_expression(Assignment), [;],
+    condition(Condition), [;],
+    variable_change_part(VariableChangePart),
+    [')'],
+    block(Block).
 
-term(t_multiply(X, Y)) --> term(X), [*], high_precedence_expression(Y).
-term(t_divide(X, Y)) --> term(X), [/], high_precedence_expression(Y).
-term(X) --> high_precedence_expression(X).
+variable_change_part(Expression) -->
+    increment_expression(Expression) |
+    decrement_expression(Expression).
+variable_change_part(Expression) -->
+    assignment_expression(Expression).
 
-high_precedence_expression(t_high_precedence(X)) --> ['('], expression(X), [')'].
+while_loop_command(t_while_command(Condition, Block)) -->
+    [while],
+    ['('],
+    condition(Condition),
+    [')'],
+    block(Block).
 
-high_precedence_expression(X) --> variable_name(X).
-high_precedence_expression(X) --> integer(X).
+for_enhanced_command(t_for_enhanced_command(Variable, Expression1, Expression2, Block)) -->
+    [for],
+    variable_name(Variable),
+    [in],
+    [range],
+    ['('],
+    expression(Expression1),
+    [; ],
+    expression(Expression2),
+    [')'],
+    block(Block).
 
-integer(digit(X)) --> [X], {number(X)}.
+condition(t_condition(Expression1, Comparison_Operator, Expression2)) -->
+    expression(Expression1),
+    comparison_operator(Comparison_Operator),
+    expression(Expression2).
 
-variable_name(var(X)) --> [X],{atom(X)}.
+% EXPRESSIONS (HIGHER THE LEVEL OF EXPRESSION, HIGHER THE PRECEDENCE OF OPERATOR)
+expression(t_expression(Expression)) --> expression_level_1(Expression).
 
-condition(t_cond(X, Y, Z)) --> expression(X), comparison_operators(Y), expression(Z).
+expression_level_1(t_add(X, Y)) --> expression_level_1(X), [+], expression_level_2(Y).
+expression_level_1(t_sub(X, Y)) --> expression_level_1(X), [-], expression_level_2(Y).
+expression_level_1(X) --> expression_level_2(X).
 
-decrement_expression(t_dec_expr(X, Y)) --> variable_name(X), decrement_operator(Y).
-decrement_expression(t_dec_expr(X, Y)) --> decrement_operator(X), variable_name(Y).
-increment_expression(t_inc_expr(X, Y)) --> variable_name(X), increment_operator(Y).
-increment_expression(t_inc_expr(X, Y)) --> increment_operator(X), variable_name(Y).
+expression_level_2(t_multiply(X, Y)) --> expression_level_2(X), [*], expression_level_3(Y).
+expression_level_2(t_divide(X, Y)) --> expression_level_2(X), [/], expression_level_3(Y).
+expression_level_2(t_boolean_expression(X, Operator, Y)) --> expression(X), boolean_operator(Operator), expression(Y).
+expression_level_2(X) --> expression_level_3(X).
 
-% terminals
-
-variable_type(t_type(int)) --> [int].
-variable_type(t_type(float)) --> [float].
-variable_type(t_type(bool)) --> [bool].
-variable_type(t_type(string)) --> [string].
-
-decrement_operator(--) --> [--].
-increment_operator(++) --> [++].
-
-comparison_operators(<) --> [<].
-comparison_operators(>) --> [>].
-comparison_operators(<=) --> [<=].
-comparison_operators(>=) --> [>=].
-comparison_operators(==) --> [==].
-comparison_operators(!=) --> [!=].
-
-single_quote(\') --> [\'].
-double_quote(\") --> [\"].
-======= 
+expression_level_3(X) --> ['('], expression(X), [')'].
+expression_level_3(X) -->
+    ternary_expression(X) |
+    variable_name(X) |
+    value(X).
 
 ternary_expression(t_ternary_expression(Condition, TrueExpression, FalseExpression)) -->
-    ['('], condition(Condition),  [')'], ['?'], expression(TrueExpression), [':'], expression(FalseExpression).
+    ['('],
+    condition(Condition),
+    ['?'],
+    expression(TrueExpression),
+    [':'],
+    expression(FalseExpression),
+    [')'].
 
-value(t_float_value(Value)) --> float_value(Value).
-value(t_integer_value(Value)) --> integer_value(Value).
-value(t_boolean_value(Value)) --> boolean_value(Value).
-value(t_string_value(Value)) --> string_value(Value).
+assignment_expression(t_assignment_expression(Name, Expression)) -->
+    variable_name(Name),
+    assignment_operator(_),
+    expression(Expression).
 
-boolean_operator(BooleanOperator) -->
-    and_operator(BooleanOperator) | or_operator(BooleanOperator) | not_operator(BooleanOperator).
+% NOT TESTED
+value(Variable) -->
+    integer_value(Variable) |
+    float_value(Variable) |
+    string_value(Variable) |
+    boolean_value(Variable).
 
-and_operator(t_bool_and) --> [and].
+decrement_expression(t_post_decrement(Variable)) --> variable_name(Variable), [--].
+decrement_expression(t_pre_decrement(Variable)) --> [--], variable_name(Variable).
+increment_expression(t_post_increment(Variable)) --> variable_name(Variable), [++].
+increment_expression(t_pre_increment(Variable)) --> [++], variable_name(Variable).
 
-or_operator(t_bool_or) --> [or].
+%%%%%%%%%%%%%
+% TERMINALS %
+%%%%%%%%%%%%%
 
-not_operator(t_bool_not) --> [not].
+% CHECKS IF THE VARIABLE NAME HAS ALLOWED CHARACTERS, AND VARIABLE NAME IS NOT A KEYWORDS
+variable_name(t_variable_name(Variable), [Variable | Tail], Tail) :-
+    atom(Variable), not_keyword(Variable).
 
-operator(BooleanOperator) --> boolean_operator(BooleanOperator).
-operator(t_operator(Operator), [Operator | Tail], Tail) :- member(Operator, [+, -, *, /]).
+not_keyword(Variable) :-
+    not(member(Variable, [int, float, bool, string, true, false, for,
+    if, elif, else, while, range, and, or, not, in, range, <, >, <=, >=, ==,
+    '!=', ++, --, +, -, *, /])).
 
-variable_name(t_variable_name(VariableName), [VariableName | Tail], Tail) :-
-    atom(VariableName).
+variable_type(t_variable_type(Head), [Head | T], T) :-
+    member(Head, [int, float, bool, string]).
 
-float_value(Value, [Value | Tail], Tail) :- float(Value).
+comparison_operator(t_comparison_operator(Head), [Head | T], T) :-
+    member(Head, [<, >, <=, >=, ==, '!=']).
 
-integer_value(Value, [Value | Tail], Tail) :- integer(Value).
+integer_value(t_integer(Variable), [Variable | Tail], Tail) :- integer(Variable).
+float_value(t_float(Variable), [Variable | Tail], Tail) :- float(Variable).
+string_value(t_string(Variable), [Variable | Tail], Tail) :- string(Variable).
+boolean_value(t_boolean(Value), [Value | Tail], Tail) :- member(Value, [true, false]).
 
-string_value(Value, [Value | Tail], Tail) :- string(Value).
+assignment_operator(t_assignment_operator) --> [=].
+end_of_command(t_end_of_command) --> [;].
 
-boolean_value(true) --> [true].
-boolean_value(false) --> [false].
+boolean_operator(t_boolean_operator(Operator), [Operator | Tail], Tail) :-
+    member(Operator, [and, or, not]).
 
-assignment_operator(=) --> [=].
-end_of_command(;) --> [;].
+% HELPER PREDICATE FOR TESTING - IS EXPECTED TO PARSE EVERY GRAMMAR RULE
+parse(T, L) :- assignment_command(T, L, []);assignment_expression(T, L, []);assignment_operator(T, L, []);block(T, L, []);command(T, L, []);command_list(T, L, []);condition(T, L, []);decrement_expression(T, L, []);elif_part(T, L, []);else_part(T, L, []);end_of_command(T, L, []);expression(T, L, []);expression_level_1(T, L, []);expression_level_2(T, L, []);expression_level_3(T, L, []);for_enhanced_command(T, L, []);for_loop_command(T, L, []);if_command(T, L, []);if_part(T, L, []);increment_expression(T, L, []);print_command(T, L, []);program(T, L, []); ternary_expression(T, L, []);value(T, L, []);variable_change_part(T, L, []);variable_declaration_command(T, L, []);while_loop_command(T, L, []);variable_name(T, L, []);variable_type(T, L, []);comparison_operator(T, L, []);integer_value(T, L, []);float_value(T, L, []);string_value(T, L, []);boolean_value(T, L, []);boolean_operator(T, L, []).
 
-and_operator(and) --> [and].
-or_operator(or) --> [or].
-not_operator(not) --> [not].
+%%%%%%%%%%%
+% TESTING %
+%%%%%%%%%%%
 
-%TEST CASES
+% BOOLEAN OPERATOR
+?- parse(t_boolean_operator(and) , [and]).
+?- parse(t_boolean_operator(or) , [or]).
+?- parse(t_boolean_operator(not) , [not]).
 
-?-variable_type(t_type(int), [int, end], [end]).
-?-variable_type(t_type(float), [float, end], [end]).
-?-variable_type(t_type(bool), [bool, end], [end]).
-?-variable_type(t_type(string), [string, end], [end]).
+% END OF COMMAND
+?- parse(t_end_of_command, [;]).
 
-?-decrement_operator((--), [--, end], [end]).
-?-increment-operator((++), [++, end], [end]).
+% ASSIGNMENT OPERATOR
+?- parse(t_assignment_operator, [=]).
 
-?-comparison_operators((<), [<, end], [end]).
-?-comparison_operators((>), [>, end], [end]).
-?-comparison_operators((<=), [<=, end], [end]).
-?-comparison_operators((>=), [>=, end], [end]).
-?-comparison_operators((==), [==, end], [end]).
-?-comparison_operators((!=), [!=, end], [end]).
+% VARIABLE VALUE
+?- parse(t_boolean(true)             , [true]).
+?- parse(t_boolean(false)             , [false]).
+?- parse(t_string("This is a string with \" '' ") , ["This is a string with \" '' "]).
+?- parse(t_float(12.3)              , [12.3]).
+?- parse(t_integer(12)              , [12]).
 
-?-single_quote((\'), [\', end], [end]).
-?-double_quote((\"), [\", end], [end]).
+% COMPARISON OPERATOR
+?- parse(t_comparison_operator(<)  , [<]).
+?- parse(t_comparison_operator(>)  , [>]).
+?- parse(t_comparison_operator(>=)  , [>=]).
+?- parse(t_comparison_operator(<=)  , [<=]).
+?- parse(t_comparison_operator('!=') , ['!=']).
 
-?-boolean_value((true), [true, end], [end]).
-?-boolean_value((false), [false, end], [end]).
+% VARIABLE TYPE
+?- parse(t_variable_type(int)  , [int]).
+?- parse(t_variable_type(float) , [float]).
+?- parse(t_variable_type(bool)  , [bool]).
+?- parse(t_variable_type(string) , [string]).
 
-?-assignment_operator((=), [=, end], [end]).
-?-end_of_command((;), [;, end], [end]).
+% VARIABLE NAME
+?- parse(t_variable_name(variableName) , [variableName]).
+?- parse(t_variable_name(variable_name) , [variable_name]).
 
-?-and_operator((and), [and, end], [end]).
-?-or_operator((or), [or, end], [end]).
-?-not_operator((not), [not, end], [end]).
-=======
-% TEST CODE
+% INCREMENT AND DECREMENT OPERATORS
+?- parse(t_post_increment(t_variable_name(x)) , [x , ++]).
+?- parse(t_pre_increment(t_variable_name(x)) , [++ , x]).
+?- parse(t_post_decrement(t_variable_name(x)) , [x , --]).
+?- parse(t_pre_decrement(t_variable_name(x)) , [-- , x]).
 
-?- value(t_float_value(1.23), [1.23, 2], [2]).
-?- value(t_integer_value(1), [1, 2.2], [2.2]).
-?- value(t_boolean_value(true), [true, 2], [2]).
-?- value(t_string_value("Hello''"), ["Hello''", 2], [2]).
-?- value(t_string_value("Hello"), ["Hello", 2], [2]).
-?- value(t_string_value("Hello\""), ["Hello\"", 2], [2]).
+?- value(t_float(12.3), [12.3], []).
+?- value(t_integer(12), [12], []).
+?- value(t_string("Hello String"), ["Hello String"], []).
+?- value(t_boolean(true), [true], []).
 
-?- boolean_operator(t_bool_and, [and, end], [end]).
-?- boolean_operator(t_bool_or, [or, end], [end]).
-?- boolean_operator(t_bool_not, [not, end], [end]).
+% ASSIGNMENT EXPRESSION
+?- parse(t_assignment_expression(t_variable_name(x) , t_expression(t_string("String"))) , [x , = , "String"]).
+?- parse(t_assignment_expression(t_variable_name(x) , t_expression(t_integer(12)))   , [x , = , 12]).
+?- parse(t_assignment_expression(t_variable_name(x) , t_expression(t_float(12.3)))   , [x , = , 12.3]).
+?- parse(t_assignment_expression(t_variable_name(x) , t_expression(t_boolean(true)))  , [x , = , true]).
+?- parse(t_assignment_expression(t_variable_name(x) , t_expression(t_boolean(false)))  , [x , = , false]).
 
-?- and_operator(t_bool_and, [and, end], [end]).
+% TERNARY EXPRESSION
+?- parse(t_expression(t_ternary_expression(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((<)), t_expression(t_integer(3))), t_expression(t_add(t_integer(3), t_integer(2))), t_expression(t_sub(t_integer(2), t_integer(1))))), ['(', x, <, 3, '?', 3, +, 2, ':', 2, -, 1, ')']).
+?- parse(t_ternary_expression(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((<)), t_expression(t_integer(3))), t_expression(t_add(t_integer(3), t_integer(2))), t_expression(t_add(t_string("Yes"), t_string("No")))), ['(', x, <, 3, '?', 3, +, 2, ':', "Yes", +, "No", ')']).
 
-?- or_operator(t_bool_or, [or, end], [end]).
+% EXPRESSION - PENDING
+?- parse(t_expression(t_sub(t_add(t_integer(1), t_multiply(t_integer(2), t_integer(3))), t_integer(4))), [1, +, 2, *, 3, -, 4]).
+?- parse(t_expression(t_sub(t_add(t_integer(1), t_multiply(t_integer(2), t_integer(3))), t_multiply(t_integer(4), t_expression(t_divide(t_divide(t_integer(3), t_integer(2)), t_integer(10)))))), [1, +, 2, *, 3, -, 4, *, '(', 3, /, 2, /, 10, ')']).
+?- parse(t_expression(t_sub(t_add(t_integer(1), t_multiply(t_ternary_expression(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_expression(t_string("Hello")), t_expression(t_string("Bye"))), t_integer(3))), t_multiply(t_integer(4), t_expression(t_divide(t_divide(t_integer(3), t_integer(2)), t_integer(10)))))), [1, +, '(', x, >, 2, '?', "Hello", ':', "Bye", ')', *, 3, -, 4, *, '(', 3, /, 2, /, 10, ')']).
 
-?- not_operator(t_bool_not, [not, end], [end]).
+% CONDITION
+?- parse(t_condition(t_expression(t_add(t_integer(3), t_integer(2))), t_comparison_operator((>)), t_expression(t_sub(t_integer(5), t_integer(2)))), [3, +, 2, >, 5, -, 2]).
+?- parse(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), [x, > , 2]).
 
-?- operator(t_operator(+), [+, end], [end]).
-?- operator(t_operator(-), [-, end], [end]).
-?- operator(t_operator(*), [*, end], [end]).
-?- operator(t_operator(/), [/, end], [end]).
+% PRINT COMMAND
+?- parse(t_print(t_expression(t_add(t_integer(2), t_integer(3)))), [ print, '(', 2, +, 3, ')', ';']).
+?- parse(t_print(t_expression(t_string("Hello World"))), [ print, '(', "Hello World",')', ';']).
 
-?- variable_name(t_variable_name(variable_name), [variable_name, end], [end]). % Variable name can contain lower case, upper case and underscores
-?- variable_name(t_variable_name(variableName), [variableName, end], [end]).
-?- variable_name(t_variable_name(variable), [variable, end], [end]).
-?- not(variable_name(t_variable_name(Variable_name), [Variable_name, end], [end])). % Variable name should not start with capital letter
-?- not(variable_name(t_variable_name(_variable_name), [_variable_name, end], [end])). % Variable name should not start with underscore
+% VARIABLE DECLARATION COMMAND
+?- parse(t_variable_declaration_command(t_variable_type(int), t_variable_name(x), t_expression(t_integer(3))), [int, x, =, 3, ';']).
+?- parse(t_variable_declaration_command(t_variable_type(int), t_variable_name(x)), [int, x,';']).
 
-?- float_value(12.3, [12.3], []).
+% VARIABLE ASSIGNMENT EXPRESSION
+?- parse(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(12), t_integer(12)))), [ x, =, 12, +, 12]).
+?- parse(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(12), t_integer(12)))), [ x, =, 12, +, 12, ;]).
 
-?- integer_value(12, [12], []).
+% PRINT COMMAND
+?- parse(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), [print, '(', 2, +, 1, ')', ;]).
 
-?- string_value("Hello''", ["Hello''", 12], [12]).
-?- string_value("Hello", ["Hello", 12], [12]).
-?- string_value("Hello \"", ["Hello \"", 12], [12]).
+% FOR ENHANCED COMMAND
+?- parse( t_for_enhanced_command(t_variable_name(i), t_expression(t_add(t_integer(2), t_integer(2))), t_expression(t_integer(3)), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), [for, i, in, range, '(', 2, +, 2, ;, 3, ')', '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}']).
 
-?- boolean_value(true, [true, false], [false]).
-?- boolean_value(false, [false, true], [true]).
+% WHILE COMMAND
+?- parse( t_while_command(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(20))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), [while, '(', x, >, 20, ')', '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}']).
 
+% FOR COMMAND
+?- parse( t_for_loop_command(t_assignment_expression(t_variable_name(i), t_expression(t_integer(0))), t_condition(t_expression(t_variable_name(i)), t_comparison_operator((<)), t_expression(t_add(t_integer(3), t_integer(1)))), t_post_increment(t_variable_name(i)), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), [for, '(', i, =, 0, ;, i, <, 3, +, 1, ;, i, ++, ')', '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}']).
 
+% IF COMMAND
+?- parse(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3))))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}']).
+
+% IF ELIF ELSE COMMAND
+?- parse( t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_elif(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((==)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', elif, '(', x, ==, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}']).
+
+% IF ELIF ELIF ELSE COMMAND
+?- parse( t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_elif(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((==)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3))))))), t_elif(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((==)), t_expression(t_integer(3))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3))))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', elif, '(', x, ==, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', elif, '(', x, ==, 3, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}']).
+
+% IF ELSE COMMAND
+?- parse( t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}']).
+
+% COMMAND LIST
+?- command_list(t_command_list(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), t_command(t_print(t_expression(t_add(t_integer(2), t_integer(1)))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}', print, '(', 2, +, 1, ')', ;], []).
+
+% BLOCK
+?- block(t_block(t_command_list(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), t_command(t_print(t_expression(t_add(t_integer(2), t_integer(1))))))), ['{', if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}', print, '(', 2, +, 1, ')', ;, '}'], []).
+
+% PROGRAM
+?- program( t_program(t_command_list(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), t_command(t_print(t_expression(t_add(t_integer(2), t_integer(1))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}', print, '(', 2, +, 1, ')', ;], []).
