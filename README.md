@@ -1,5 +1,5 @@
-# SER502
-Main Project Repository for SER502 (Emerging Languages and Programming Paradigms)
+# IMPRO
+> Main Project Repository for SER502 (Emerging Languages and Programming Paradigms)
 
 ## Environment Used
 - Linux
@@ -20,7 +20,12 @@ $ pacman -S swi-prolog
 ### Windows/MacOS
 Get the latest stable version from the [Official Website](https://www.swi-prolog.org/download/stable)
 
-## Installing Developed Language
+## Installing SLY
+```
+pip install sly
+```
+
+## Installing IMPRO
 - TODO
 
 ## Building Compiler
