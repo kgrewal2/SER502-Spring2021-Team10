@@ -113,8 +113,6 @@ for_enhanced_command(t_for_enhanced_command(Variable, Expression1, Expression2, 
     [')'],
     block(Block).
 
-range_value(Value) --> variable_name(Value) | integer_value(Value).
-
 condition(t_condition(Expression1, Comparison_Operator, Expression2)) -->
     expression(Expression1),
     comparison_operator(Comparison_Operator),
@@ -196,7 +194,6 @@ boolean_operator(t_boolean_operator(Operator), [Operator | Tail], Tail) :-
 
 % HELPER PREDICATE FOR TESTING - IS EXPECTED TO PARSE EVERY GRAMMAR RULE
 parse(T, L) :- assignment_command(T, L, []);assignment_expression(T, L, []);assignment_operator(T, L, []);block(T, L, []);command(T, L, []);command_list(T, L, []);condition(T, L, []);decrement_expression(T, L, []);elif_part(T, L, []);else_part(T, L, []);end_of_command(T, L, []);expression(T, L, []);expression_level_1(T, L, []);expression_level_2(T, L, []);expression_level_3(T, L, []);for_enhanced_command(T, L, []);for_loop_command(T, L, []);if_command(T, L, []);if_part(T, L, []);increment_expression(T, L, []);print_command(T, L, []);program(T, L, []); ternary_expression(T, L, []);value(T, L, []);variable_change_part(T, L, []);variable_declaration_command(T, L, []);while_loop_command(T, L, []);variable_name(T, L, []);variable_type(T, L, []);comparison_operator(T, L, []);integer_value(T, L, []);float_value(T, L, []);string_value(T, L, []);boolean_value(T, L, []);boolean_operator(T, L, []).
-
 
 %%%%%%%%%%%
 % TESTING %
