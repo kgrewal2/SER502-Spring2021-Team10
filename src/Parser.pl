@@ -309,4 +309,3 @@ parse(T, L) :- assignment_command(T, L, []);assignment_expression(T, L, []);assi
 
 % PROGRAM
 ?- program( t_program(t_command_list(t_if_command(t_if(t_condition(t_expression(t_variable_name(x)), t_comparison_operator((>)), t_expression(t_integer(2))), t_block(t_command_list(t_print(t_expression(t_add(t_integer(2), t_integer(1)))), t_command(t_assignment_expression(t_variable_name(x), t_expression(t_add(t_integer(2), t_integer(3)))))))), t_else(t_block(t_command(t_assignment_expression(t_variable_name(x), t_expression(t_integer(2))))))), t_command(t_print(t_expression(t_add(t_integer(2), t_integer(1))))))), [if, '(', x, >, 2, ')',  '{', print, '(', 2, +, 1, ')', ;, x, =, 2, +, 3, ;, '}', else, '{', x, =, 2, ;, '}', print, '(', 2, +, 1, ')', ;], []).
-
