@@ -40,3 +40,31 @@ eval_comparison_operator(t_comparison_operator(==), V1, V2, false):- V1 =\= V2.
 
 eval_comparison_operator(t_comparison_operator('!='), V1, V2, true):- V1 =\= V2.
 eval_comparison_operator(t_comparison_operator('!='), V1, V2, false):- V1 =:= V2.
+
+% Evaluating IF, ELIF, ELSE - PARTS
+eval_if_part(t_if(Condition, Block), Env, NEnv) :- 
+     [if], 
+     ['('], 
+     eval_condition(Condition, Env, Env1), 
+     [')'], 
+     eval_block(Block, Env1, NEnv).
+
+eval_elif_part(t_elif(Condition, Block), Env, NEnv) :- 
+     [elif], 
+     ['('], 
+     eval_condition(Condition, Env, Env1), 
+     [')'], 
+     eval_block(Block, Env1, NEnv).
+
+eval_elif_part(t_elif(Condition, Block, ElifPart), Env, NEnv) :- 
+     [elif], 
+     ['('], 
+     eval_condition(Condition, Env, Env1), 
+     [')'], 
+     eval_block(Block, Env1, Env2), 
+     eval_elif_part(ElifPart, Env2, NEnv).
+
+eval_else_part(t_else(Block), Env, NEnv) :- 
+     [else], 
+     eval_block(Block, Env, NEnv).
+    
