@@ -166,6 +166,16 @@ eval_expression(t_divide(X,Y), Env, Val, Env):-
       lookup(Y,Env, Val2),
       Val is Val1/Val2.
 
+% Evaluating ternary expression      
+eval_ternary_expression(t_ternary_expression(Condition, TrueExpression, _FalseExpression), Env, NEnv, Val) :-
+    eval_condition(Condition, Env, Env1, Val1),
+    booleanValue(Val1, true),
+    eval_expression(TrueExpression, Env1, NEnv, Val).
+
+eval_ternary_expression(t_ternary_expression(Condition, _TrueExpression, FalseExpression), Env, NEnv, Val) :- 
+    eval_condition(Condition, Env, Env1, Val1),
+    booleanValue(Val1, false),
+    eval_expression(FalseExpression, Env1, NEnv, Val).
 
 
 	
