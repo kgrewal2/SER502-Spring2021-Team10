@@ -1,3 +1,5 @@
+:- module(read_file, [read_file/2]).
+
 read_file(FileName, ConvertedData) :-
     open(FileName, read, Stream),
     read_stream(Stream, FileData),

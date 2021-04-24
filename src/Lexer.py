@@ -79,6 +79,7 @@ def write_tokens_to_file(tokens, filename):
 
 
 if __name__ == '__main__':
+    print(Constants.PRINT_YELLOW_TEXT + "Starting Lexer" + Constants.PRINT_NORMAL_TEXT)
     parsed_args = parse_arguments()
     input_filename = parsed_args.input[0]
     output_filename = parsed_args.input[0][:-4:] + Constants.TOKEN_FILE_EXTENSION
@@ -90,5 +91,4 @@ if __name__ == '__main__':
 
     should_evaluate = parsed_args.evaluate
     if should_evaluate:
-        print(Constants.PRINT_YELLOW_TEXT + "Starting Evaluation" + Constants.PRINT_NORMAL_TEXT)
-        os.system("swipl --quiet TokenReader.pl Parser.pl Evaluator.pl")
+        os.system("swipl --quiet -t main main.pl")
