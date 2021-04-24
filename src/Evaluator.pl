@@ -146,10 +146,6 @@ eval_expression(t_add(X,Y), Env, Val, Env):-
       lookup(Y,Env, Val2),
       Val is Val1+Val2.
 
-eval_expression(t_add(X,Y), Env, Val, Env):-
-      lookup(X,Env, Val1),
-      lookup(Y,Env, Val2),
-      Val is Val1+Val2.
 % Subtraction Expression
 eval_expression(t_sub(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
