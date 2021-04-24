@@ -16,8 +16,14 @@ Get the latest stable version from the [Official Website](https://www.swi-prolog
 pip install sly
 ```
 
+---
+
 ## Usage
 ### Lexer.py
+```
+ python Lexer.py TestProgram.imp --evaluate
+```
+
 ```
 usage: Lexer.py [-h] [--evaluate] InputFileName
 
@@ -30,6 +36,8 @@ optional arguments:
   -h, --help     show this help message and exit
   --evaluate     Evaluate the generated tokens
 ```
+
+---
 
 ## Contributors
 - Kamal Penmetcha
