@@ -180,7 +180,14 @@ eval_assignment_operator(t_assignment_operator, =).
 % End of command
 eval_end_of_command(t_end_of_command, ;).
 
-	
+% Evaluating variable type
+eval_variable_type(t_variable_type(int), I):- number(I), \+float(I).  
+eval_variable_type(t_variable_type(float), F):- float(F).  
+eval_variable_type(t_variable_type(string), S):- string(S).  
+eval_variable_type(t_variable_type(bool), C, true):- C is true.
+eval_variable_type(t_variable_type(bool), C, false):- C is false.
+
+
 %%%%%%%%%%%	
 % TESTING %
 %%%%%%%%%%%
@@ -209,3 +216,11 @@ eval_end_of_command(t_end_of_command, ;).
 
 % TESTING END OF COMMAND
 ?- eval_end_of_command(t_end_of_command, ;).
+
+% TESTING VARIABLE TYPE
+?- eval_variable_type(t_variable_type(float), 5.5). 
+?- eval_variable_type(t_variable_type(int), 5). 
+?- eval_variable_type(t_variable_type(string), "String testing"). 
+?- eval_variable_type(t_variable_type(string), "String testing 'K' "). 
+?- eval_variable_type(t_variable_type(bool), C, false). 
+?- eval_variable_type(t_variable_type(bool), C, true). 
