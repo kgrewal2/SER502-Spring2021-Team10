@@ -1,9 +1,26 @@
 % EVALUATOR
 
+% Environment lookup
+lookup(Id, [(Id, Val) | _], Val).
+lookup(Id, [_|T], Val) :- lookup(Id, T, Val).
+
+% Environment update
+update(Id, Val, [], [(Id,Val)]).
+update(Id, Val, [(Id,_)|T], [(Id,Val)|T]).
+update(Id, Val, [H|T], [H| Env]):- H \= (Id, _), update(Id, Val, T, Env).
+
+% Evaluating program
+eval_program(t_program(_P)) :- eval_command_list(_CL, [], _).
+
 % Evaluating block
 eval_block(t_block(CommandList), Env, NEnv) :-
 	eval_command_list(CommandList, Env, NEnv).
 
+% Evaluating command list
+eval_command_list(t_command_list(C, CL), Env, EnvRes):- 
+	eval_command(C,Env,Env1), eval_command_list(CL,Env1,EnvRes).
+eval_command_list(t_command(C), Env, EnvRes):-
+	eval_command(C, Env, EnvRes).
 
 % Evaluating command
 eval_command(t_assignment_expression(C), Env, NEnv) :- eval_assignment_command(C, Env, NEnv).
@@ -67,25 +84,7 @@ eval_elif_part(t_elif(Condition, Block, ElifPart), Env, NEnv) :-
 eval_else_part(t_else(Block), Env, NEnv) :- 
      [else], 
      eval_block(Block, Env, NEnv).
-    
 
-% Environment lookup
-lookup(Id, [(Id, Val) | _], Val).
-lookup(Id, [_|T], Val) :- lookup(Id, T, Val).
-
-% Environment update
-update(Id, Val, [], [(Id,Val)]).
-update(Id, Val, [(Id,_)|T], [(Id,Val)|T]).
-update(Id, Val, [H|T], [H| Env]):- H \= (Id, _), update(Id, Val, T, Env).
-
-% Evaluating program
-eval_program(t_program(_P)) :- eval_command_list(_CL, [], _).
-
-% Evaluating command list
-eval_command_list(t_command_list(C, CL), Env, EnvRes):- 
-	eval_command(C,Env,Env1), eval_command_list(CL,Env1,EnvRes).
-eval_command_list(t_command(C), Env, EnvRes):-
-	eval_command(C, Env, EnvRes).
 	
 % Evaluating while loop command
 eval_while_loop_command(t_while_command(C,B), Env, EnvRes) :- 
@@ -102,8 +101,8 @@ booleanValue(false, false).
 booleanValue(Val, true) :- Val \= false.	
 	
 % Evaluating print command
-eval_print_command(t_print(Expression), Env, EnvRes) :-
-	eval_expression(Expression, Env, EnvRes).
+eval_print_command(t_print(Expression), Env, Val, Env) :-
+	eval_expression(Expression, Env, Val, Env).
 
 % Decrement Expression
 eval_expression(t_post_decrement(a),Env, Val, NewEnv):-
@@ -127,34 +126,35 @@ eval_expression(t_pre_increment(a),Env, Val, NewEnv):-
     Val is Val1+1,
     update(X,Val, Env, NewEnv).
 
-% Addtion Expression
+% Addition Expression
 eval_expression(t_add(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
       Val is Val1+Val2.
 
-eval_expression(t_add(X,Y), Env, Val, Env):-
-      lookup(X,Env, Val1),
-      lookup(Y,Env, Val2),
-      Val is Val1+Val2.
 % Substraction Expression
 eval_expression(t_sub(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
       Val is Val1-Val2.
+	  
 % Multiplication Expression
 eval_expression(t_multiply(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
       Val is Val1*Val2.
-% Division
+	  
+% Division Expression
 eval_expression(t_divide(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
       Val is Val1/Val2.
 
-
-
+% Assignment operator
+eval_assignment_operator(t_assignment_operator, =).
+	
+% End of command
+eval_end_of_command(t_end_of_command, ;).
 	
 %%%%%%%%%%%	
 % TESTING %
@@ -166,6 +166,8 @@ eval_expression(t_divide(X,Y), Env, Val, Env):-
 ?- update(x, 4, [], _Res).
 ?- update(x, 5, [(x,4), (y,6)], _Res).
 ?- update(y, 5, [(x,4), (y,6)], _Res).
+
+% TESTING EXPRESSION
 ?- eval_expression(t_post_decrement(a),[(a,3), (y,5)],2,[(a,2), (y,5)]).
 ?- eval_expression(t_pre_decrement(a),[(a,3), (y,5)],2,[(a,2), (y,5)]).
 ?- eval_expression(t_post_increment(a),[(a,3), (y,5)],4,[(a,4), (y,5)]).
@@ -176,3 +178,9 @@ eval_expression(t_divide(X,Y), Env, Val, Env):-
 ?- eval_expression(t_divide(a,y),[(a,10), (y,5)],2,[(a,10), (y,5)]).
 ?- eval_expression(t_divide(a,y),[(a,1), (y,2)],0.5,[(a,1), (y,2)]).
 ?- eval_expression(t_divide(a,y),[(a,0), (y,2)],0,[(a,0), (y,2)]).
+
+% TESTING ASSIGNMENT OPERATOR
+?- eval_assignment_operator(t_assignment_operator, =).
+
+% TESTING END OF COMMAND
+?- eval_end_of_command(t_end_of_command, ;).
