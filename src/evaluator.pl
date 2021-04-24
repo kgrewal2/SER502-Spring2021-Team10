@@ -221,7 +221,6 @@ eval_variable_type(t_variable_type(bool), C, false):- C is false.
 
 % TESTING END OF COMMAND
 ?- eval_end_of_command(t_end_of_command, ;).
-<<<<<<< HEAD:src/Evaluator.pl
 
 % TESTING VARIABLE TYPE
 ?- eval_variable_type(t_variable_type(float), 5.5). 
@@ -230,6 +229,5 @@ eval_variable_type(t_variable_type(bool), C, false):- C is false.
 ?- eval_variable_type(t_variable_type(string), "String testing 'K' "). 
 ?- eval_variable_type(t_variable_type(bool), C, false). 
 ?- eval_variable_type(t_variable_type(bool), C, true). 
-%
-=======
->>>>>>> main:src/evaluator.pl
+
+
