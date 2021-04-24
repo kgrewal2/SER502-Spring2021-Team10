@@ -114,13 +114,8 @@ booleanValue(false, false).
 booleanValue(Val, true) :- Val \= false.	
 	
 % Evaluating print command
-<<<<<<< HEAD
-eval_print_command(t_print(Expression), Env, Val, Env) :-
-	eval_expression(Expression, Env, Val, Env).
-=======
 eval_print_command(t_print(Expression), Env, EnvRes) :-
 	eval_expression(Expression, Env, EnvRes, NewEnv), write(EnvRes).
->>>>>>> c275e2532f53ead5906bbdd685ec1432bf1ac641
 
 % Decrement Expression
 eval_expression(t_post_decrement(a),Env, Val, NewEnv):-
@@ -150,11 +145,7 @@ eval_expression(t_add(X,Y), Env, Val, Env):-
       lookup(Y,Env, Val2),
       Val is Val1+Val2.
 
-<<<<<<< HEAD
-% Substraction Expression
-=======
 % Subtraction Expression
->>>>>>> c275e2532f53ead5906bbdd685ec1432bf1ac641
 eval_expression(t_sub(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
@@ -172,13 +163,6 @@ eval_expression(t_divide(X,Y), Env, Val, Env):-
       lookup(Y,Env, Val2),
       Val is Val1/Val2.
 
-<<<<<<< HEAD
-% Assignment operator
-eval_assignment_operator(t_assignment_operator, =).
-	
-% End of command
-eval_end_of_command(t_end_of_command, ;).
-=======
 % Evaluating ternary expression      
 eval_ternary_expression(t_ternary_expression(Condition, TrueExpression, _FalseExpression), Env, NEnv, Val) :-
     eval_condition(Condition, Env, Env1, Val1),
@@ -189,9 +173,13 @@ eval_ternary_expression(t_ternary_expression(Condition, _TrueExpression, FalseEx
     eval_condition(Condition, Env, Env1, Val1),
     booleanValue(Val1, false),
     eval_expression(FalseExpression, Env1, NEnv, Val).
+	
+% Assignment operator
+eval_assignment_operator(t_assignment_operator, =).
+	
+% End of command
+eval_end_of_command(t_end_of_command, ;).
 
-
->>>>>>> c275e2532f53ead5906bbdd685ec1432bf1ac641
 	
 %%%%%%%%%%%	
 % TESTING %
