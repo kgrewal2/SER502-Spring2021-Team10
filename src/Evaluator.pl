@@ -58,6 +58,19 @@ eval_comparison_operator(t_comparison_operator(==), V1, V2, false):- V1 =\= V2.
 eval_comparison_operator(t_comparison_operator('!='), V1, V2, true):- V1 =\= V2.
 eval_comparison_operator(t_comparison_operator('!='), V1, V2, false):- V1 =:= V2.
 
+% Evaluating IF, ELIF, ELSE- COMMAND
+eval_if_command(t_if_command(IfTree), Env, NEnv) :-
+    eval_if_part(IfTree, Env, NEnv).
+
+eval_if_command(t_if_command(IfTree, ElifTree, ElseTree), Env, NEnv) :-
+    eval_if_part(IfTree, Env, Env1),
+    eval_elif_part(ElifTree, Env1, Env2),
+    eval_else_part(ElseTree, Env2, NEnv).
+
+eval_if_command(t_if_command(IfTree, ElseTree), Env, NEnv) :-
+    eval_if_part(IfTree, Env, Env1),
+    eval_else_part(ElseTree, Env1, NEnv).
+
 % Evaluating IF, ELIF, ELSE - PARTS
 eval_if_part(t_if(Condition, Block), Env, NEnv) :- 
      [if], 
@@ -101,8 +114,13 @@ booleanValue(false, false).
 booleanValue(Val, true) :- Val \= false.	
 	
 % Evaluating print command
+<<<<<<< HEAD
 eval_print_command(t_print(Expression), Env, Val, Env) :-
 	eval_expression(Expression, Env, Val, Env).
+=======
+eval_print_command(t_print(Expression), Env, EnvRes) :-
+	eval_expression(Expression, Env, EnvRes, NewEnv), write(EnvRes).
+>>>>>>> c275e2532f53ead5906bbdd685ec1432bf1ac641
 
 % Decrement Expression
 eval_expression(t_post_decrement(a),Env, Val, NewEnv):-
@@ -132,7 +150,11 @@ eval_expression(t_add(X,Y), Env, Val, Env):-
       lookup(Y,Env, Val2),
       Val is Val1+Val2.
 
+<<<<<<< HEAD
 % Substraction Expression
+=======
+% Subtraction Expression
+>>>>>>> c275e2532f53ead5906bbdd685ec1432bf1ac641
 eval_expression(t_sub(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
@@ -150,11 +172,26 @@ eval_expression(t_divide(X,Y), Env, Val, Env):-
       lookup(Y,Env, Val2),
       Val is Val1/Val2.
 
+<<<<<<< HEAD
 % Assignment operator
 eval_assignment_operator(t_assignment_operator, =).
 	
 % End of command
 eval_end_of_command(t_end_of_command, ;).
+=======
+% Evaluating ternary expression      
+eval_ternary_expression(t_ternary_expression(Condition, TrueExpression, _FalseExpression), Env, NEnv, Val) :-
+    eval_condition(Condition, Env, Env1, Val1),
+    booleanValue(Val1, true),
+    eval_expression(TrueExpression, Env1, NEnv, Val).
+
+eval_ternary_expression(t_ternary_expression(Condition, _TrueExpression, FalseExpression), Env, NEnv, Val) :- 
+    eval_condition(Condition, Env, Env1, Val1),
+    booleanValue(Val1, false),
+    eval_expression(FalseExpression, Env1, NEnv, Val).
+
+
+>>>>>>> c275e2532f53ead5906bbdd685ec1432bf1ac641
 	
 %%%%%%%%%%%	
 % TESTING %

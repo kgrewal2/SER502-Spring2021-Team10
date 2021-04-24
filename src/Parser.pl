@@ -28,8 +28,6 @@ command(C) -->
     while_loop_command(C).
 
 % IF, ELIF, ELSE - COMMAND
-if_command(t_if_command(IfTree)) -->
-    if_part(IfTree).
 if_command(t_if_command(IfTree, ElifTree, ElseTree)) -->
     if_part(IfTree),
     elif_part(ElifTree),
@@ -37,6 +35,8 @@ if_command(t_if_command(IfTree, ElifTree, ElseTree)) -->
 if_command(t_if_command(IfTree, ElseTree)) -->
     if_part(IfTree),
     else_part(ElseTree).
+if_command(t_if_command(IfTree)) -->
+    if_part(IfTree).
 
 % IF, ELIF, ELSE - PARTS
 if_part(t_if(Condition, Block)) -->
