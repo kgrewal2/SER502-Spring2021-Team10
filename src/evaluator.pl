@@ -230,4 +230,22 @@ eval_variable_type(t_variable_type(bool), C, false):- C is false.
 ?- eval_variable_type(t_variable_type(bool), C, false). 
 ?- eval_variable_type(t_variable_type(bool), C, true). 
 
+% TESTING COMPARISON OPERATOR
+eval_comparison_operator(t_comparison_operator(>), 7, 5, R).
+eval_comparison_operator(t_comparison_operator(>), 5, 7, R). 
+
+eval_comparison_operator(t_comparison_operator(<), 5, 7, R).
+eval_comparison_operator(t_comparison_operator(<), 7, 5, R).
+
+eval_comparison_operator(t_comparison_operator(<=), 6, 8, R).
+eval_comparison_operator(t_comparison_operator(<=), 8, 6, R). 
+
+eval_comparison_operator(t_comparison_operator(>=), 9, 5, R).
+eval_comparison_operator(t_comparison_operator(>=), 10, 12, R).
+
+eval_comparison_operator(t_comparison_operator(==), 4, 4, R).
+eval_comparison_operator(t_comparison_operator(==), 5, 4, R).
+
+eval_comparison_operator(t_comparison_operator('!='), 5, 4, R).
+eval_comparison_operator(t_comparison_operator('!='), 4, 4, R).
 
