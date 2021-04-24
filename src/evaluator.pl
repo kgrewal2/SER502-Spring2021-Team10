@@ -137,11 +137,29 @@ eval_expression(t_pre_increment(a),Env, Val, NewEnv):-
     Val is Val1+1,
     update(X,Val, Env, NewEnv).
 
-% Addition Expression
-eval_expression(t_add(X,Y), Env, Val, Env):-
-      lookup(X,Env, Val1),
-      lookup(Y,Env, Val2),
-      Val is Val1+Val2.
+
+% Addtion Expression
+eval_expression(t_add(X,Y), Env, Val, NewEnv):-
+    eval_expression(X, Env, Val1, Env1), 
+    eval_expression(Y, Env1, Val2, NewEnv), 
+    string(Val1), \+ string(Val2),
+    string_concat(Val1, Val2, Val).
+
+eval_expression(t_add(X,Y), Env, Val, NewEnv):-
+    eval_expression(X, Env, Val1, Env1), 
+    eval_expression(Y, Env1, Val2, NewEnv), 
+    \+ string(Val1), string(Val2),
+    string_concat(Val1, Val2, Val).
+
+eval_expression(t_add(X,Y), Env, Val, NewEnv):-
+    eval_expression(X, Env, Val1, Env1), eval_expression(Y, Env1, Val2, NewEnv), 
+    \+string(Val1), \+string(Val2),
+    Val is Val1 + Val2.
+
+eval_expression(t_add(X,Y), Env, Val, NewEnv):-
+    eval_expression(X, Env, Val1, Env1), eval_expression(Y, Env1, Val2, NewEnv), 
+    \+ number(Val1), \+ number(Val2), 
+    string_concat(Val1, Val2, Val).
 
 % Subtraction Expression
 eval_expression(t_sub(X,Y), Env, Val, Env):-
@@ -179,6 +197,12 @@ eval_assignment_operator(t_assignment_operator, =).
 eval_end_of_command(t_end_of_command, ;).
 
 
+eval_expression(t_boolean(I), Env, I, Env).
+eval_expression(t_integer(X), Env, X, Env).
+eval_expression(t_float(X), Env, X, Env).
+eval_expression(t_string(X), Env, X, Env).
+eval_expression(t_variable_name(I), Env, Val, Env):- lookup(I, Env, Val).
+
 %%%%%%%%%%%	
 % TESTING %
 %%%%%%%%%%%
@@ -195,7 +219,16 @@ eval_end_of_command(t_end_of_command, ;).
 ?- eval_expression(t_pre_decrement(a),[(a,3), (y,5)],2,[(a,2), (y,5)]).
 ?- eval_expression(t_post_increment(a),[(a,3), (y,5)],4,[(a,4), (y,5)]).
 ?- eval_expression(t_pre_increment(a),[(a,3), (y,5)],4,[(a,4), (y,5)]).
-?- eval_expression(t_add(a,y),[(a,3), (y,5)],8,[(a,3), (y,5)]).
+
+
+?- eval_expression(t_add(t_string("hi"),t_integer(2)),[(a,3), (y,5)],"hi2", [(a,3), (y,5)]).
+?- eval_expression(t_add(t_integer(2),t_string("hi")),[(a,3), (y,5)],"2hi", [(a,3), (y,5)]).
+?- eval_expression(t_add(t_string("hello"),t_string("world")),[(a,3), (y,5)],"helloworld", [(a,3), (y,5)]).
+?- eval_expression(t_add(t_integer(2),t_integer(3)),[(a,3), (y,5)],5, [(a,3), (y,5)]).
+?- eval_expression(t_add(t_variable_name(a),t_variable_name(y)),[(a,3), (y,5)],8,[(a,3), (y,5)]).
+?- eval_expression(t_add(t_integer(2),t_variable_name(y)),[(a,3), (y,5)],7,[(a,3), (y,5)]).
+?- eval_expression(t_add(t_variable_name(y),t_integer(2)),[(a,3), (y,5)],7,[(a,3), (y,5)]).
+
 ?- eval_expression(t_sub(a,y),[(a,3), (y,5)],-2,[(a,3), (y,5)]).
 ?- eval_expression(t_multiply(a,y),[(a,3), (y,5)],15,[(a,3), (y,5)]).
 ?- eval_expression(t_divide(a,y),[(a,10), (y,5)],2,[(a,10), (y,5)]).
@@ -209,4 +242,22 @@ eval_end_of_command(t_end_of_command, ;).
 ?- eval_end_of_command(t_end_of_command, ;).
 
 
+% TESTING COMPARISON OPERATOR
+?- eval_comparison_operator(t_comparison_operator(>), 7, 5, R).
+?- eval_comparison_operator(t_comparison_operator(>), 5, 7, R). 
+
+?- eval_comparison_operator(t_comparison_operator(<), 5, 7, R).
+?- eval_comparison_operator(t_comparison_operator(<), 7, 5, R).
+
+?- eval_comparison_operator(t_comparison_operator(<=), 6, 8, R).
+?- eval_comparison_operator(t_comparison_operator(<=), 8, 6, R). 
+
+?- eval_comparison_operator(t_comparison_operator(>=), 9, 5, R).
+?- eval_comparison_operator(t_comparison_operator(>=), 10, 12, R).
+
+?- eval_comparison_operator(t_comparison_operator(==), 4, 4, R).
+?- eval_comparison_operator(t_comparison_operator(==), 5, 4, R).
+
+?- eval_comparison_operator(t_comparison_operator('!='), 5, 4, R).
+?- eval_comparison_operator(t_comparison_operator('!='), 4, 4, R).
 
