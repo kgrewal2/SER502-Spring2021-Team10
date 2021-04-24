@@ -54,7 +54,7 @@ def parse_arguments():
         description='IMPRO Lexer - Converts the IMPRO source code into a list of tokens and save it as '
                     '<InputFileName>' + Constants.TOKEN_FILE_EXTENSION)
     parser.add_argument('input', metavar='InputFileName', type=str,
-                        nargs=1, help='Path to Input File that contains the IMPRO source code')
+                        nargs=1, help='Filepath to IMPRO source code')
     parser.add_argument('--evaluate', action='store_true', help='Evaluate the generated tokens')
     return parser.parse_args()
 
@@ -91,4 +91,4 @@ if __name__ == '__main__':
 
     should_evaluate = parsed_args.evaluate
     if should_evaluate:
-        os.system("swipl --quiet -t main main.pl")
+        os.system("swipl --quiet -g \"main('" + output_filename + "')\" main.pl")
