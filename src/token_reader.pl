@@ -1,7 +1,9 @@
+:- module(read_file, [read_file/2]).
+
 read_file(FileName, ConvertedData) :-
     open(FileName, read, Stream),
     read_stream(Stream, FileData),
-    convert(FileData, ConvertedData),
+    convert(FileData, ConvertedData), !,
     close(Stream).
 
 % READING CURRENT LINE AND CONVERTING INTO CHARACTERS

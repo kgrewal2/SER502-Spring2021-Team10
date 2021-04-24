@@ -73,29 +73,34 @@ eval_if_command(t_if_command(IfTree, ElseTree), Env, NEnv) :-
 
 % Evaluating IF, ELIF, ELSE - PARTS
 eval_if_part(t_if(Condition, Block), Env, NEnv) :- 
-     [if], 
-     ['('], 
-     eval_condition(Condition, Env, Env1), 
-     [')'], 
-     eval_block(Block, Env1, NEnv).
+     eval_condition(Condition, Env, Env1, Val),
+     booleanValue(Val, true),
+     eval_block(Block, Env1, Env2),
+     eval_if_part(t_if(Condition, Block), Env2, NEnv).
+eval_if_part(t_if(Condition, Block), Env, NEnv) :- 
+     eval_condition(Condition, Env, Env1, Val),
+     booleanValue(Val, false).
 
-eval_elif_part(t_elif(Condition, Block), Env, NEnv) :- 
-     [elif], 
-     ['('], 
-     eval_condition(Condition, Env, Env1), 
-     [')'], 
-     eval_block(Block, Env1, NEnv).
+eval_elif_part(t_elif(Condition, Block), Env, NEnv) :-  
+     eval_condition(Condition, Env, Env1, Val),
+     booleanValue(Val, true), 
+     eval_block(Block, Env1, Env2),
+     eval_elif_part(t_elif(Condition, Block), Env2, NEnv).
+eval_elif_part(t_elif(Condition, Block), Env, NEnv) :-  
+     eval_condition(Condition, Env, Env1, Val),
+     booleanValue(Val, false).
 
-eval_elif_part(t_elif(Condition, Block, ElifPart), Env, NEnv) :- 
-     [elif], 
-     ['('], 
-     eval_condition(Condition, Env, Env1), 
-     [')'], 
+eval_elif_part(t_elif(Condition, Block, ElifPart), Env, NEnv) :-  
+     eval_condition(Condition, Env, Env1, Val),
+     booleanValue(Val, true),
      eval_block(Block, Env1, Env2), 
-     eval_elif_part(ElifPart, Env2, NEnv).
-
+     eval_elif_part(ElifPart, Env2, Env3),
+     eval_elif_part(t_elif(Condition, Block, ElifPart), Env3, NEnv).
+eval_elif_part(t_elif(Condition, Block, ElifPart), Env, NEnv) :-  
+     eval_condition(Condition, Env, Env1, Val),
+     booleanValue(Val, false).
+     
 eval_else_part(t_else(Block), Env, NEnv) :- 
-     [else], 
      eval_block(Block, Env, NEnv).
 
 	
@@ -216,6 +221,7 @@ eval_variable_type(t_variable_type(bool), C, false):- C is false.
 
 % TESTING END OF COMMAND
 ?- eval_end_of_command(t_end_of_command, ;).
+<<<<<<< HEAD:src/Evaluator.pl
 
 % TESTING VARIABLE TYPE
 ?- eval_variable_type(t_variable_type(float), 5.5). 
@@ -225,3 +231,5 @@ eval_variable_type(t_variable_type(bool), C, false):- C is false.
 ?- eval_variable_type(t_variable_type(bool), C, false). 
 ?- eval_variable_type(t_variable_type(bool), C, true). 
 %
+=======
+>>>>>>> main:src/evaluator.pl

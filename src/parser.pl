@@ -1,3 +1,4 @@
+:- module(program, [program/3]).
 :- table expression_level_1/3, expression_level_2/3, expression_level_3/3.
 
 % START SYMBOL

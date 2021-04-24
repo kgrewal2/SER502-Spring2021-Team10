@@ -19,11 +19,12 @@ pip install sly
 ---
 
 ## Usage
-### Lexer.py
+### Evaluating TestProgram.imp
 ```
  python Lexer.py TestProgram.imp --evaluate
 ```
 
+### Options
 ```
 usage: Lexer.py [-h] [--evaluate] InputFileName
 
