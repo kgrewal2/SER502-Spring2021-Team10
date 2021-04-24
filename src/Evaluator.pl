@@ -224,3 +224,4 @@ eval_variable_type(t_variable_type(bool), C, false):- C is false.
 ?- eval_variable_type(t_variable_type(string), "String testing 'K' "). 
 ?- eval_variable_type(t_variable_type(bool), C, false). 
 ?- eval_variable_type(t_variable_type(bool), C, true). 
+%
