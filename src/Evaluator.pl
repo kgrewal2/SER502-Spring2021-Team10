@@ -103,7 +103,7 @@ booleanValue(Val, true) :- Val \= false.
 	
 % Evaluating print command
 eval_print_command(t_print(Expression), Env, EnvRes) :-
-	eval_expression(Expression, Env, EnvRes).
+	eval_expression(Expression, Env, EnvRes, NewEnv), write(EnvRes).
 
 % Decrement Expression
 eval_expression(t_post_decrement(a),Env, Val, NewEnv):-
@@ -127,7 +127,7 @@ eval_expression(t_pre_increment(a),Env, Val, NewEnv):-
     Val is Val1+1,
     update(X,Val, Env, NewEnv).
 
-% Addtion Expression
+% Addition Expression
 eval_expression(t_add(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
@@ -137,7 +137,7 @@ eval_expression(t_add(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
       Val is Val1+Val2.
-% Substraction Expression
+% Subtraction Expression
 eval_expression(t_sub(X,Y), Env, Val, Env):-
       lookup(X,Env, Val1),
       lookup(Y,Env, Val2),
