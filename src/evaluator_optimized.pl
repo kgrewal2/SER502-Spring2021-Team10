@@ -21,8 +21,53 @@ eval_command(t_variable_declaration_command(Type, t_variable_name(Name), Express
     eval_expression(Expression, Env, R2),
     update(R1, Name, R2, Env, NewEnv).
 
-eval_command(t_print_expression(Expression), Env, _) :- eval_expression(Expression, Env, Result), write(Result).
-eval_command(t_print_string(String), _, _) :- write(String).
+eval_command(t_print_expression(Expression), Env, Env) :- eval_expression(Expression, Env, Result), write(Result).
+eval_command(t_print_string(String), Env, Env) :- write(String).
+
+eval_command(t_if_command(IfTree), Env, NewEnv) :- eval_if_part(IfTree, Env, NewEnv, _).
+
+eval_command(t_while_command(C,B), Env, NewEnv) :-
+	eval_condition(C,Env,true),
+	eval_block(B,Env,E1),
+	eval_command(t_while_command(C,B), E1, NewEnv).
+eval_command(t_while_command(C, _), Env, _) :-
+	eval_condition(C,Env,false).
+
+eval_command(t_if_command(IfTree, _, _), Env, NewEnv) :-
+    eval_if_part(IfTree, Env, NewEnv, true).
+eval_command(t_if_command(IfTree, ElifTree, _), Env, NewEnv) :-
+    eval_if_part(IfTree, Env, _, false),
+    eval_elif_part(ElifTree, Env, NewEnv, true).
+eval_command(t_if_command(IfTree, ElifTree, ElseTree), Env, NewEnv) :-
+    eval_if_part(IfTree, Env, _, false),
+    eval_elif_part(ElifTree, Env, _, false),
+    eval_else_part(ElseTree, Env, NewEnv, true).
+eval_command(t_if_command(IfTree, _), Env, NewEnv) :-
+    eval_if_part(IfTree, Env, NewEnv, true).
+eval_command(t_if_command(IfTree, ElseTree), Env, NewEnv) :-
+    eval_if_part(IfTree, Env, _, false),
+    eval_else_part(ElseTree, Env, NewEnv, true).
+
+eval_if_part(t_if(Condition, Block), Env, NewEnv, true) :-
+     eval_condition(Condition, Env, true),
+     eval_block(Block, Env, NewEnv).
+eval_if_part(t_if(Condition, _), Env, Env, false) :-
+     eval_condition(Condition, Env, false).
+
+eval_elif_part(t_elif(Condition, Block), Env, NewEnv, true) :-
+     eval_condition(Condition, Env, true),
+     eval_block(Block, Env, NewEnv).
+eval_elif_part(t_elif(Condition, Block, _), Env, NewEnv, true) :-
+     eval_condition(Condition, Env, true),
+     eval_block(Block, Env, NewEnv).
+eval_elif_part(t_elif(Condition, Block, ElifPart), Env, NewEnv, R) :-
+     eval_condition(Condition, Env, false),
+     eval_elif_part(ElifPart, Env, NewEnv, R).
+eval_elif_part(t_elif(Condition, _, _), Env, Env, false) :-
+     eval_condition(Condition, Env, false).
+
+eval_else_part(t_else(Block), Env, NewEnv, true) :-
+     eval_block(Block, Env, NewEnv).
 
 eval_condition(t_condition(Expression1, Operator, Expression2), Env, Result):-
     eval_expression(Expression1, Env, R1),

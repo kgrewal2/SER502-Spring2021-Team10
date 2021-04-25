@@ -1,15 +1,6 @@
-# FACTORIAL
-#int number = 5;
-#
-#print("Input Number: " + 5);
-#
-#int result = 1;
-#
-#for i in range(2; number+1) {
-#    result = result * i;
-#}
-#
-#print("Input Number: " + result);
+int a = 1;
 
-print_string("Hello");
-print_expression(12 + 23);
+while(a<10){
+    print_expression(a);
+    a = a + 1;
+}
