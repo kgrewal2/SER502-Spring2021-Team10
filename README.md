@@ -19,6 +19,7 @@ homebrew install swi-prolog
 
 ## Usage
 ### Evaluating TestProgram.imp using Lexer.py
+> Requires `swipl` in the command line. Doesn't work with `swipl.exe`.
 `--evaluate` option is used to generate the tokens and evaluate them at the same time.
 ```
  python Lexer.py TestProgram.imp --evaluate
@@ -40,6 +41,7 @@ optional arguments:
 If the user doesn't use the `--evaluate` flag, the tokens are saved in the `xxx.imptokens` file.
 
 ### Evaluating the tokens file
+> Use this if you are using `swipl.exe` or swipl application
 - Load the `main.pl` file
 - Type `main('xxx.imptokens')` where `xxx` is the name of the source code file.
 
