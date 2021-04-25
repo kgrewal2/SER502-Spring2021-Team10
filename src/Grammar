@@ -36,7 +36,7 @@ elif_part --> ['elif'], ['('], condition, [')'], block, elif_command.
 
 while_loop_command --> ['while'], ['('], condition, [')'], block.
 
-for_enhanced_command --> ['for'], variable_name, ['in'], ['range'], ['('], range_value, [','], range_value, [')'], block.
+for_enhanced_command --> ['for'], variable_name, ['in'], ['range'], ['('], range_value, [';'], range_value, [')'], block.
 
 range_value --> variable_name | integer.
 
