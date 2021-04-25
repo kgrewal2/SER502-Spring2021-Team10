@@ -7,25 +7,24 @@
 ```
 $ pacman -S swi-prolog
 ```
-
-#### MacOS
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
+#### MacOS (Requires Homebrew)
+```
+homebrew install swi-prolog
+```
 
 ### Installing SLY
-```
-pip install sly
-```
+`pip install sly` or `python3 -m pip install sly`
 
 ---
 
 ## Usage
-### Evaluating TestProgram.imp
+### Evaluating TestProgram.imp using Lexer.py
+`--evaluate` option is used to generate the tokens and evaluate them at the same time.
 ```
  python Lexer.py TestProgram.imp --evaluate
 ```
 
-### Options
+### Options for Lexer.py
 ```
 usage: Lexer.py [-h] [--evaluate] InputFileName
 
@@ -38,6 +37,11 @@ optional arguments:
   -h, --help     show this help message and exit
   --evaluate     Evaluate the generated tokens
 ```
+If the user doesn't use the `--evaluate` flag, the tokens are saved in the file.
+
+### Evaluating the tokens file
+- Load the `main.pl` file
+- Type `main('inputfile.imptokens'` where inputfile is the name of the source code.
 
 ---
 
