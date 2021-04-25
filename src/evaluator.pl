@@ -10,7 +10,7 @@ update(Id, Val, [(Id,_)|T], [(Id,Val)|T]).
 update(Id, Val, [H|T], [H| Env]):- H \= (Id, _), update(Id, Val, T, Env).
 
 % Evaluating program
-eval_program(t_program(_P)) :- eval_command_list(_CL, [], _).
+eval_program(t_program(P)) :- eval_command_list(CL, [], _).
 
 % Evaluating block
 eval_block(t_block(CommandList), Env, NEnv) :-
@@ -196,34 +196,37 @@ eval_ternary_expression(t_ternary_expression(Condition, _TrueExpression, FalseEx
     booleanValue(Val1, false),
     eval_expression(FalseExpression, Env1, NEnv, Val).
 	
-% Assignment expression x=5
-eval_assignment_expression(t_assignment_expression(Name, Expression), Env, Val, NewEnv):-
-	eval_variable_name(Name),
-	lookup(),
-	eval_assignment_operator(_),
-	eval_expression(Expression),
-	
-% Assignment operator
-eval_assignment_operator(t_assignment_operator, =).
-
-
-% Assignment expression
-eval_assignment_expression(t_assignment_expression(t_variable_name(Name), t_expression(Expression)), Env, NewEnv):-
-	eval_expression(Expression, Env, Val1, Env2),
-	update(Name, Val1, Env2, NewEnv).
-
-
-	
-% End of command
-eval_end_of_command(t_end_of_command, ;).
-
-
-
+% Evaluating expression
 eval_expression(t_boolean(I), Env, I, Env).
 eval_expression(t_integer(X), Env, X, Env).
 eval_expression(t_float(X), Env, X, Env).
 eval_expression(t_string(X), Env, X, Env).
 eval_expression(t_variable_name(I), Env, Val, Env):- lookup(I, Env, Val).
+	
+% Assignment operator
+eval_assignment_operator(t_assignment_operator, =).
+
+% Assignment expression
+eval_assignment_expression(t_assignment_expression(t_variable_name(Name), t_expression(Expression)), Env, NewEnv):-
+	eval_expression(Expression, Env, Val1, Env2),
+	update(Name, Val1, Env2, NewEnv).
+	
+% End of command
+eval_end_of_command(t_end_of_command, ;).
+
+% Evaluating condition
+eval_condition(t_condition(Expression1, Operator, Expression2), Env, Result):-
+    eval_expression(Expression1, Env, R1),
+    eval_expression(Expression2, Env, R2),
+    eval_comparison(R1, Operator, R2, Result).
+
+
+% Evaluating for loop command
+% eval_for_loop_command
+
+
+
+
 
 %%%%%%%%%%%	
 % TESTING %
@@ -289,10 +292,10 @@ eval_expression(t_variable_name(I), Env, Val, Env):- lookup(I, Env, Val).
 ?- eval_expression(t_divide(t_float(10),t_variable_name(y)),[(a,3.0), (y,5.0)],2.0,[(a,3.0), (y,5.0)]).
 ?- eval_expression(t_divide(t_variable_name(y),t_float(2)),[(a,3.0), (y,5.0)],2.5,[(a,3.0), (y,5.0)]).
 
+% TESTING ASSIGNMENT EXPRESSION
 ?- eval_assignment_expression(t_assignment_expression(t_variable_name(x) , t_expression(t_integer(12))),[(a,3), (y,5)],[(a,3), (y,5), (x,12)]).
 ?- eval_assignment_expression(t_assignment_expression(t_variable_name(z) , t_expression(t_variable_name(a))),[(a,3), (y,5)],[(a,3), (y,5), (z,3)]).
 ?- eval_assignment_expression(t_assignment_expression(t_variable_name(z) , t_expression(t_mult(t_integer(2), t_integer(2)))),[(a,3), (y,5)], [(a,3), (y,5), (z,4)]).
-
 
 % TESTING ASSIGNMENT OPERATOR
 ?- eval_assignment_operator(t_assignment_operator, =).
