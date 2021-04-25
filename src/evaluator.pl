@@ -190,6 +190,13 @@ eval_ternary_expression(t_ternary_expression(Condition, _TrueExpression, FalseEx
     booleanValue(Val1, false),
     eval_expression(FalseExpression, Env1, NEnv, Val).
 	
+% Assignment expression x=5
+eval_assignment_expression(t_assignment_expression(Name, Expression), Env, Val, NewEnv):-
+	eval_variable_name(Name),
+	lookup(),
+	eval_assignment_operator(_),
+	eval_expression(Expression),
+	
 % Assignment operator
 eval_assignment_operator(t_assignment_operator, =).
 	
@@ -220,7 +227,6 @@ eval_expression(t_variable_name(I), Env, Val, Env):- lookup(I, Env, Val).
 ?- eval_expression(t_post_increment(a),[(a,3), (y,5)],4,[(a,4), (y,5)]).
 ?- eval_expression(t_pre_increment(a),[(a,3), (y,5)],4,[(a,4), (y,5)]).
 
-
 ?- eval_expression(t_add(t_string("hi"),t_integer(2)),[(a,3), (y,5)],"hi2", [(a,3), (y,5)]).
 ?- eval_expression(t_add(t_integer(2),t_string("hi")),[(a,3), (y,5)],"2hi", [(a,3), (y,5)]).
 ?- eval_expression(t_add(t_string("hello"),t_string("world")),[(a,3), (y,5)],"helloworld", [(a,3), (y,5)]).
@@ -240,7 +246,6 @@ eval_expression(t_variable_name(I), Env, Val, Env):- lookup(I, Env, Val).
 
 % TESTING END OF COMMAND
 ?- eval_end_of_command(t_end_of_command, ;).
-
 
 % TESTING COMPARISON OPERATOR
 ?- eval_comparison_operator(t_comparison_operator(>), 7, 5, R).
