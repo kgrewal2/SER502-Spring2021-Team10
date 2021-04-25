@@ -53,7 +53,9 @@ decrement_expression --> decrement_operator, variable_name.
 increment_expression --> variable_name, increment_operator.
 increment_expression --> increment_operator, variable_name.
 
-print_command --> ['print'], ['('], expression, [')'], end_of_command.
+print_command --> [print_string], ['('], string_value, [')'], end_of_command.
+print_command --> [print_string], ['('], variable_name, [')'], end_of_command.
+print_command --> [print_expression], ['('], expression, [')'], end_of_command.
 
 expression --> value, operator, expression.
 expression --> ['('], expression, [')'], operator, expression.
