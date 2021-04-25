@@ -1,8 +1,31 @@
+%%%%%%%%%%%%%%
+% Evaluation %
+%%%%%%%%%%%%%%
+
+eval_command(t_variable_declaration_command(Type, t_variable_name(Name), Value), Env, NewEnv) :-
+    eval_variable_type(Type, Env, EvaluatedType),
+    eval_expression(Value, Env, EvaluatedValue),
+    update(EvaluatedType, Name, EvaluatedValue, Env, NewEnv).
+
+eval_expression(t_expression(X), Env, Result) :- eval_expression(X, Env, Result).
+eval_expression(t_add(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1+R2.
+eval_expression(t_sub(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1-R2.
+eval_expression(t_multiply(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1*R2.
+eval_expression(t_divide(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1/R2.
+eval_expression(t_boolean(Variable), _, Variable).
+eval_expression(t_integer(Variable), _, Variable).
+eval_expression(t_float(Variable)  , _, Variable).
+eval_expression(t_string(Variable) , _, Variable).
+eval_expression(t_variable_name(Name), Env, Value) :- lookup(Name, Value, Env).
+
+eval_variable_type(t_variable_type(Type), Env, Type).
+
+
 %%%%%%%%%%%%%%%
 % Environment %
 %%%%%%%%%%%%%%%
 
-% lookup(Name, Value, Env, NewEnv)
+% lookup(Name, Value, Env)
 lookup(Name, Value, [(_, Name, Value) | _]).
 lookup(Name, Value, [_Head | Tail]) :- lookup(Name, Value, Tail).
 
