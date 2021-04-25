@@ -25,19 +25,6 @@ homebrew install swi-prolog
  python Lexer.py TestProgram.imp --evaluate
 ```
 
-### Options for Lexer.py
-```
-usage: Lexer.py [-h] [--evaluate] InputFileName
-
-IMPRO Lexer - Converts the IMPRO source code into a list of tokens and save it as <InputFileName>.imptokens
-
-positional arguments:
-  InputFileName  Path to Input File that contains the IMPRO source code
-
-optional arguments:
-  -h, --help     show this help message and exit
-  --evaluate     Evaluate the generated tokens
-```
 If the user doesn't use the `--evaluate` flag, the tokens are saved in the `xxx.imptokens` file.
 
 ### Evaluating the tokens file
