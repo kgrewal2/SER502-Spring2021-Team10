@@ -192,6 +192,30 @@ eval_expression(t_divide(X,Y), Env, Val, NewEnv):-
     Val is Val1 / Val2.
 
 
+
+eval_expression(t_boolean_expression(X, Operator, Y), Env, Val, NewEnv):-
+    eval_expression(X, Env, Val1, Env1), 
+    eval_expression(Y, Env1, Val2, NewEnv),
+    eval_boolean_operator(Operator,Operator1),
+    eval_operator(Val1,Val2,Operator1,Val).
+
+eval_expression(t_boolean_expression(X, Operator), Env, Val, NewEnv):-
+     eval_expression(X, Env, Val1, NewEnv),
+     eval_boolean_operator(Operator,Operator1),
+     eval_operator(Val1,Operator1,Val).
+
+eval_operator(true,true,and,true).
+eval_operator(true,false,and,false).
+eval_operator(false,true,and,false).
+eval_operator(false,false,and,false).
+eval_operator(true,true,or,true).
+eval_operator(true,false,or,true).
+eval_operator(false,true,or,true).
+eval_operator(false,false,or,false).
+eval_operator(false,not,true).
+eval_operator(true,not,false).
+
+
 % Evaluating ternary expression      
 eval_ternary_expression(t_ternary_expression(Condition, TrueExpression, _FalseExpression), Env, NEnv, Val) :-
     eval_condition(Condition, Env, Env1, Val1),
@@ -225,7 +249,7 @@ eval_variable_type(t_variable_type(bool), C, true):- C is true.
 eval_variable_type(t_variable_type(bool), C, false):- C is false.
 
 
-
+eval_boolean_operator(t_boolean_operator(X),X).
 eval_expression(t_boolean(I), Env, I, Env).
 eval_expression(t_integer(X), Env, X, Env).
 eval_expression(t_float(X), Env, X, Env).
@@ -335,3 +359,14 @@ eval_expression(t_variable_name(I), Env, Val, Env):- lookup(I, Env, Val).
 ?- eval_comparison_operator(t_comparison_operator('!='), 5, 4, R).
 ?- eval_comparison_operator(t_comparison_operator('!='), 4, 4, R).
 
+
+?- eval_expression(t_boolean_expression(t_boolean(false),t_boolean_operator(and),t_boolean(false)),[(a,3), (y,5)],false, [(a,3), (y,5)]).
+?- eval_expression(t_boolean_expression(t_boolean(true), t_boolean_operator(and), t_boolean(false)),[(a,3), (y,5)],false, [(a,3), (y,5)].
+?- eval_expression(t_boolean_expression(t_boolean(false),t_boolean_operator(and),t_boolean(true)),[(a,3), (y,5)],false, [(a,3), (y,5)]).
+?- eval_expression(t_boolean_expression(t_boolean(true), t_boolean_operator(and), t_boolean(true)),[(a,3), (y,5)],true, [(a,3), (y,5)]).
+?- eval_expression(t_boolean_expression(t_boolean(false),t_boolean_operator(or),t_boolean(false)),[(a,3), (y,5)],false, [(a,3), (y,5)]).
+?- eval_expression(t_boolean_expression(t_boolean(true), t_boolean_operator(or),t_boolean(false)),[(a,3), (y,5)],true, [(a,3), (y,5)]).
+?- eval_expression(t_boolean_expression(t_boolean(false),t_boolean_operator(or),t_boolean(true)),[(a,3), (y,5)],true, [(a,3), (y,5)]).
+?- eval_expression(t_boolean_expression(t_boolean(true), t_boolean_operator(or),t_boolean(true)),[(a,3), (y,5)],true, [(a,3), (y,5)]).
+?- eval_expression(t_boolean_expression(t_boolean(false),t_boolean_operator(not)),[(a,3), (y,5)],true, [(a,3), (y,5)]).
+?- eval_expression(t_boolean_expression(t_boolean(true),t_boolean_operator(not)),[(a,3), (y,5)],false, [(a,3), (y,5)]).
