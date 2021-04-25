@@ -1,11 +1,44 @@
+:- module(eval_program, [eval_program/2]).
 %%%%%%%%%%%%%%
 % Evaluation %
 %%%%%%%%%%%%%%
 
-eval_command(t_variable_declaration_command(Type, t_variable_name(Name), Value), Env, NewEnv) :-
-    eval_variable_type(Type, Env, EvaluatedType),
-    eval_expression(Value, Env, EvaluatedValue),
-    update(EvaluatedType, Name, EvaluatedValue, Env, NewEnv).
+eval_program(t_program(P), NewEnv) :- eval_command_list(P, [], NewEnv).
+
+eval_command_list(t_command_list(Command, CommandList), Env, NewEnv) :-
+    eval_command(Command, Env, E1),
+    eval_command_list(CommandList, E1, NewEnv).
+eval_command_list(t_command(Command), Env, NewEnv) :-
+    eval_command(Command, Env, NewEnv).
+
+eval_command(t_assignment_expression(t_variable_name(Name), Expression), Env, NewEnv) :-
+    eval_expression(Expression, Env, R1),
+    update(Name, R1, Env, NewEnv).
+eval_command(t_variable_declaration_command(Type, t_variable_name(Name), Expression), Env, NewEnv) :-
+    eval_variable_type(Type, Env, R1),
+    eval_expression(Expression, Env, R2),
+    update(R1, Name, R2, Env, NewEnv).
+
+eval_print(t_print(String), _) :- string(String), write(String).
+eval_print(t_print(Expression), Env) :- eval_expression(Expression, Env, Result), write(Result).
+
+eval_condition(t_condition(Expression1, Operator, Expression2), Env, Result):-
+    eval_expression(Expression1, Env, R1),
+    eval_expression(Expression2, Env, R2),
+    eval_comparison(R1, Operator, R2, Result).
+
+eval_comparison(V1, t_comparison_operator(>), V2, true)   :- V1 >  V2.
+eval_comparison(V1, t_comparison_operator(>), V2, false)  :- V1 =< V2.
+eval_comparison(V1, t_comparison_operator(<), V2, true)   :- V1 <  V2.
+eval_comparison(V1, t_comparison_operator(<), V2, false)  :- V1 >= V2.
+eval_comparison(V1, t_comparison_operator(>=), V2, true)  :- V1 >=  V2.
+eval_comparison(V1, t_comparison_operator(>=), V2, false) :- V1 <  V2.
+eval_comparison(V1, t_comparison_operator(=<), V2, true)  :- V1 =<  V2.
+eval_comparison(V1, t_comparison_operator(=<), V2, false) :- V1 > V2.
+eval_comparison(V1, t_comparison_operator(==), V2, true)  :- V1 =:=  V2.
+eval_comparison(V1, t_comparison_operator(==), V2, false) :- V1 =\= V2.
+eval_comparison(V1, t_comparison_operator('!='), V2, true)  :- V1 =\=  V2.
+eval_comparison(V1, t_comparison_operator('!='), V2, false) :- V1 =:= V2.
 
 eval_expression(t_expression(X), Env, Result) :- eval_expression(X, Env, Result).
 eval_expression(t_add(X, Y), Env, Result) :- eval_expression(X, Env, R1), eval_expression(Y, Env, R2), Result is R1+R2.
@@ -17,9 +50,9 @@ eval_expression(t_integer(Variable), _, Variable).
 eval_expression(t_float(Variable)  , _, Variable).
 eval_expression(t_string(Variable) , _, Variable).
 eval_expression(t_variable_name(Name), Env, Value) :- lookup(Name, Value, Env).
+eval_expression(t_variable_name(Name), Env, Name) :- not(lookup(Name, _, Env)), string(Name).
 
-eval_variable_type(t_variable_type(Type), Env, Type).
-
+eval_variable_type(t_variable_type(Type), _, Type).
 
 %%%%%%%%%%%%%%%
 % Environment %
@@ -68,3 +101,20 @@ error_undeclared(Name) :- error('Error: ~w Undeclared', [Name]).
 
 ?- update(int, x, 5, [], [(int, x, 5)]).
 ?- update(int, x, 5, [(int, y, 6)], [(int, y, 6), (int, x, 5)]).
+
+?- eval_expression(t_add(t_integer(3), t_integer(5)), [], 8).
+?- eval_expression(t_sub(t_integer(3), t_integer(5)), [], -2).
+?- eval_expression(t_multiply(t_integer(3), t_integer(5)), [], 15).
+?- eval_expression(t_divide(t_integer(3), t_integer(6)), [], 0.5).
+
+?- not(eval_expression(t_variable_name(x), [], _)).
+?- eval_expression(t_variable_name("String"), [], "String").
+
+?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(>),  t_integer(4)), [(int, x, 6)], true).
+?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(<),  t_integer(4)), [(int, x, 2)], true).
+?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(>=), t_integer(4)), [(int, x, 6)], true).
+?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(>=), t_integer(4)), [(int, x, 4)], true).
+?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(=<), t_integer(4)), [(int, x, 2)], true).
+?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(=<), t_integer(4)), [(int, x, 4)], true).
+?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator(==), t_integer(4)), [(int, x, 4)], true).
+?- eval_condition(t_condition(t_variable_name(x), t_comparison_operator('!='), t_integer(4)), [(int, x, 2)], true).

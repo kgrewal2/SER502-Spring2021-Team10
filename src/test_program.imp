@@ -11,7 +11,5 @@
 #
 #print("Input Number: " + result);
 
-int x = 5;
-
-x = 4;
-
+int i = 0;
+string a = "Hello";

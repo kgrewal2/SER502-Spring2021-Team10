@@ -1,9 +1,10 @@
 int
-x
+i
 =
-5
+0
 ;
-x
+string
+a
 =
-4
+"Hello"
 ;
