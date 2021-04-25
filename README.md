@@ -37,11 +37,11 @@ optional arguments:
   -h, --help     show this help message and exit
   --evaluate     Evaluate the generated tokens
 ```
-If the user doesn't use the `--evaluate` flag, the tokens are saved in the file.
+If the user doesn't use the `--evaluate` flag, the tokens are saved in the `xxx.imptokens` file.
 
 ### Evaluating the tokens file
 - Load the `main.pl` file
-- Type `main('inputfile.imptokens'` where inputfile is the name of the source code.
+- Type `main('xxx.imptokens')` where `xxx` is the name of the source code file.
 
 ---
 
