@@ -1,6 +1,6 @@
 :- use_module(token_reader).
 :- use_module(parser).
-:- use_module(evaluator_optimized).
+:- use_module(evaluator).
 
 main(Filename) :- nl,
     ansi_format([bold,fg(yellow)], 'Starting Parser', []), nl,

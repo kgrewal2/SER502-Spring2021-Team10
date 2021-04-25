@@ -1,6 +1,58 @@
-int a = 1;
+# ASSIGNMENTS AND DECLARATIONS
+int x;
+x = 3;
+int y = (4 + 5)/3;
+int z = x + y;
+int i = 5;
+int j;
+bool isBoolean = true;
+float number = 0.314;
 
+# PRINT COMMAND
+print_string("PRINT STATEMENT EXECUTED");
+print_expression(x);
+print_expression(10-5);
+
+# FOR REGULAR inside FOR ENHANCED
+print_string("FOR REGULAR inside FOR ENHANCED");
+for i in range(1;3) {
+    for(j=1; j<4; j++) {
+        print_expression(j);
+    }
+}
+
+# IF ELSE
+int a = 7;
+if( a == 3){
+    print_string("Equal to 3");
+}
+elif(a == 5){
+    print_string("Equal to 5");
+}
+elif(a == 7){
+    print_string("Equal to 7");
+}
+else{
+    print_string("I do not know");
+}
+
+# WHILE
+print_string("WHILE LOOP");
 while(a<10){
     print_expression(a);
     a = a + 1;
 }
+
+# Boolean Expressions
+print_string("BOOLEAN EXPRESSIONS");
+bool isTrue = true or false;
+bool isFalse = true and false;
+print_string("isTrue");
+print_expression(isTrue);
+print_string("isFalse");
+print_expression(isFalse);
+
+# TERNARY EXPRESSION
+print_string("TERNARY EXPRESSION");
+int pi = (1>2 ? 3+4:5+6);
+print_expression(pi);
