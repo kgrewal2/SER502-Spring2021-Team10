@@ -8,8 +8,9 @@
 $ pacman -S swi-prolog
 ```
 
-#### Windows/MacOS
-Get the latest stable version from the [Official Website](https://www.swi-prolog.org/download/stable)
+#### MacOS
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 
 ### Installing SLY
 ```
