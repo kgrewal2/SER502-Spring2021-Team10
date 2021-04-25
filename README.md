@@ -52,9 +52,13 @@ nnoremap <F10> :!python Lexer.py --evaluate %<CR>
 ```
 - Go to `src` directory
 - Create new IMP file. 
-`touch newFile.imp`
+```
+touch newFile.imp
+```
 - Open the IMP file. 
-`vim newFile.imp`
+```
+vim newFile.imp
+```
 - Press <kbd>F10</kbd> to run the IMP Program
 
 
