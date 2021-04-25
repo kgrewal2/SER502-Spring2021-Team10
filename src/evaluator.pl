@@ -205,9 +205,18 @@ eval_assignment_expression(t_assignment_expression(Name, Expression), Env, Val, 
 	
 % Assignment operator
 eval_assignment_operator(t_assignment_operator, =).
+
+
+% Assignment expression
+eval_assignment_expression(t_assignment_expression(t_variable_name(Name), t_expression(Expression)), Env, NewEnv):-
+	eval_expression(Expression, Env, Val1, Env2),
+	update(Name, Val1, Env2, NewEnv).
+
+
 	
 % End of command
 eval_end_of_command(t_end_of_command, ;).
+
 
 
 eval_expression(t_boolean(I), Env, I, Env).
@@ -280,6 +289,9 @@ eval_expression(t_variable_name(I), Env, Val, Env):- lookup(I, Env, Val).
 ?- eval_expression(t_divide(t_float(10),t_variable_name(y)),[(a,3.0), (y,5.0)],2.0,[(a,3.0), (y,5.0)]).
 ?- eval_expression(t_divide(t_variable_name(y),t_float(2)),[(a,3.0), (y,5.0)],2.5,[(a,3.0), (y,5.0)]).
 
+?- eval_assignment_expression(t_assignment_expression(t_variable_name(x) , t_expression(t_integer(12))),[(a,3), (y,5)],[(a,3), (y,5), (x,12)]).
+?- eval_assignment_expression(t_assignment_expression(t_variable_name(z) , t_expression(t_variable_name(a))),[(a,3), (y,5)],[(a,3), (y,5), (z,3)]).
+?- eval_assignment_expression(t_assignment_expression(t_variable_name(z) , t_expression(t_mult(t_integer(2), t_integer(2)))),[(a,3), (y,5)], [(a,3), (y,5), (z,4)]).
 
 
 % TESTING ASSIGNMENT OPERATOR
