@@ -7,36 +7,30 @@
 ```
 $ pacman -S swi-prolog
 ```
-
-#### Windows/MacOS
-Get the latest stable version from the [Official Website](https://www.swi-prolog.org/download/stable)
+#### MacOS (Requires Homebrew)
+```
+homebrew install swi-prolog
+```
 
 ### Installing SLY
-```
-pip install sly
-```
+`pip install sly` or `python3 -m pip install sly`
 
 ---
 
 ## Usage
-### Evaluating TestProgram.imp
+### Evaluating TestProgram.imp using Lexer.py
+`--evaluate` option is used to generate the tokens and evaluate them at the same time.
+> Requires `swipl` in the command line. Doesn't work with `swipl.exe` or swipl application.
 ```
  python Lexer.py TestProgram.imp --evaluate
 ```
 
-### Options
-```
-usage: Lexer.py [-h] [--evaluate] InputFileName
+If the user doesn't use the `--evaluate` flag, the tokens are saved in the `xxx.imptokens` file.
 
-IMPRO Lexer - Converts the IMPRO source code into a list of tokens and save it as <InputFileName>.imptokens
-
-positional arguments:
-  InputFileName  Path to Input File that contains the IMPRO source code
-
-optional arguments:
-  -h, --help     show this help message and exit
-  --evaluate     Evaluate the generated tokens
-```
+### Evaluating the tokens file
+> Use this if you are using `swipl.exe` or swipl application
+- Load the `main.pl` file
+- Type `main('xxx.imptokens')` where `xxx` is the name of the source code file.
 
 ---
 
