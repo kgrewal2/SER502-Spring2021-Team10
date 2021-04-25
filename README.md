@@ -34,6 +34,23 @@ If the user doesn't use the `--evaluate` flag, the tokens are saved in the `xxx.
 
 ---
 
+## Vim Integration
+> Enables you to run IMP files from Vim
+> Note: IMP File needs to be inside the `src` directory and vim should be opened from the `src` directory only.
+- Add to vimrc
+```
+augroup imp_ft
+  au!
+  autocmd BufNewFile,BufRead *.imp  set filetype=imp
+augroup END
+```
+
+- Add to ~/.vim/ftplugin/imp.vim
+```
+nnoremap <F10> :!python Lexer.py --evaluate %<CR>
+```
+
+
 ## Contributors
 - Kamal Penmetcha
 - Karandeep Singh Grewal
