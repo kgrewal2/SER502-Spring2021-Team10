@@ -11,5 +11,5 @@
 #
 #print("Input Number: " + result);
 
-int i = 0;
-string a = "Hello";
+print_string("Hello");
+print_expression(12 + 23);

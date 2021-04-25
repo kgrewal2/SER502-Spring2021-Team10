@@ -11,6 +11,8 @@ eval_command_list(t_command_list(Command, CommandList), Env, NewEnv) :-
 eval_command_list(t_command(Command), Env, NewEnv) :-
     eval_command(Command, Env, NewEnv).
 
+eval_block(t_block(CommandList), Env, NewEnv) :- eval_command_list(CommandList, Env, NewEnv).
+
 eval_command(t_assignment_expression(t_variable_name(Name), Expression), Env, NewEnv) :-
     eval_expression(Expression, Env, R1),
     update(Name, R1, Env, NewEnv).
@@ -19,8 +21,8 @@ eval_command(t_variable_declaration_command(Type, t_variable_name(Name), Express
     eval_expression(Expression, Env, R2),
     update(R1, Name, R2, Env, NewEnv).
 
-eval_print(t_print(String), _) :- string(String), write(String).
-eval_print(t_print(Expression), Env) :- eval_expression(Expression, Env, Result), write(Result).
+eval_command(t_print_expression(Expression), Env, _) :- eval_expression(Expression, Env, Result), write(Result).
+eval_command(t_print_string(String), _, _) :- write(String).
 
 eval_condition(t_condition(Expression1, Operator, Expression2), Env, Result):-
     eval_expression(Expression1, Env, R1),

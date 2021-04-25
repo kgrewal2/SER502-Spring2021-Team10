@@ -91,4 +91,4 @@ if __name__ == '__main__':
 
     should_evaluate = parsed_args.evaluate
     if should_evaluate:
-        os.system("swipl --quiet -g \"main('" + output_filename + "')\" main.pl")
+        os.system("swipl -g \"main('" + output_filename + "')\" main.pl")
