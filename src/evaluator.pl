@@ -169,35 +169,28 @@ eval_expression(t_add(X,Y), Env, Val, NewEnv):-
     string_concat(Val1, Val2, Val).
 
 
+
 % Substraction Expression
 eval_expression(t_sub(X,Y), Env, Val, NewEnv):-
     eval_expression(X, Env, Val1, Env1),
     eval_expression(Y, Env1, Val2, NewEnv),
-    eval_type_check(Val1,Val2,subtraction,number,number),
     Val is Val1 - Val2.
  
-eval_type_check(Val1,Val2,_Op,number,number):- number(Val1),number(Val2). 
 
-eval_type_check(Val1,_Val2,Op,number,number):- 
-   	 \+number(Val1),write("Type Error: "),
-	 write(Op),writeln(" of non numbers is not allowed"), fail.
-eval_type_check(_Val1,Val2,Op,number,number):- 
-   	 \+number(Val2),write("Type Error: "),
-	 write(Op),writeln(" of non numbers is not allowed"), fail.
-	 
-	 
-	  
 % Multiplication Expression
-eval_expression(t_multiply(X,Y), Env, Val, Env):-
-      lookup(X,Env, Val1),
-      lookup(Y,Env, Val2),
-      Val is Val1*Val2.
-	  
-% Division Expression
-eval_expression(t_divide(X,Y), Env, Val, Env):-
-      lookup(X,Env, Val1),
-      lookup(Y,Env, Val2),
-      Val is Val1/Val2.
+eval_expression(t_mult(X,Y), Env, Val, NewEnv):-
+    eval_expression(X, Env, Val1, Env1),
+    eval_expression(Y, Env1, Val2, NewEnv), 
+    number(Val1), number(Val2),
+    Val is Val1 * Val2.
+
+% Division
+eval_expression(t_divide(X,Y), Env, Val, NewEnv):-
+	eval_expression(X, Env, Val1, Env1), 
+    eval_expression(Y, Env1, Val2, NewEnv),
+    number(Val1), number(Val2),
+    Val is Val1 / Val2.
+
 
 % Evaluating ternary expression      
 eval_ternary_expression(t_ternary_expression(Condition, TrueExpression, _FalseExpression), Env, NEnv, Val) :-
@@ -277,14 +270,25 @@ eval_expression(t_variable_name(I), Env, Val, Env):- lookup(I, Env, Val).
 %?- eval_expression(t_sub(t_float(2),t_string("hi")),[(a,3.0), (y,5.0)],Ans, [(a,3.0), (y,5.0)]).
 %?- eval_expression(t_sub(t_string("hello"),t_string("world")),[(a,3.0), (y,5.0)],Ans, [(a,3.0), (y,5.0)]).
 
-?- eval_expression(t_multiply(a,y),[(a,3), (y,5)],15,[(a,3), (y,5)]).
-?- eval_expression(t_divide(a,y),[(a,10), (y,5)],2,[(a,10), (y,5)]).
-?- eval_expression(t_divide(a,y),[(a,1), (y,2)],0.5,[(a,1), (y,2)]).
-?- eval_expression(t_divide(a,y),[(a,0), (y,2)],0,[(a,0), (y,2)]).
-?- eval_expression(t_multiply(a,y),[(a,3), (y,5)],15,[(a,3), (y,5)]).
-?- eval_expression(t_divide(a,y),[(a,10), (y,5)],2,[(a,10), (y,5)]).
-?- eval_expression(t_divide(a,y),[(a,1), (y,2)],0.5,[(a,1), (y,2)]).
-?- eval_expression(t_divide(a,y),[(a,0), (y,2)],0,[(a,0), (y,2)]).
+?- eval_expression(t_mult(t_integer(2), t_integer(2)),[(a,3), (y,5)],4, [(a,3), (y,5)]).
+?- eval_expression(t_mult(t_variable_name(a),t_variable_name(y)),[(a,10), (y,5)],50,[(a,10), (y,5)]).
+?- eval_expression(t_mult(t_integer(15),t_variable_name(y)),[(a,3), (y,5)],75,[(a,3), (y,5)]).
+?- eval_expression(t_mult(t_variable_name(y),t_integer(2)),[(a,3), (y,5)],10,[(a,3), (y,5)]).
+?- eval_expression(t_mult(t_float(2), t_float(2)),[(a,3.0), (y,5.0)],4, [(a,3.0), (y,5.0)]).
+?- eval_expression(t_mult(t_variable_name(a),t_variable_name(y)),[(a,6.0), (y,2.0)],12.0,[(a,6.0), (y,2.0)]).
+?- eval_expression(t_mult(t_float(10),t_variable_name(y)),[(a,3.0), (y,5.0)],50.0,[(a,3.0), (y,5.0)]).
+?- eval_expression(t_mult(t_variable_name(y),t_float(2)),[(a,3.0), (y,5.0)],10.0,[(a,3.0), (y,5.0)]).
+
+?- eval_expression(t_divide(t_integer(2), t_integer(2)),[(a,3), (y,5)],1, [(a,3), (y,5)]).
+?- eval_expression(t_divide(t_variable_name(a),t_variable_name(y)),[(a,10), (y,5)],2,[(a,10), (y,5)]).
+?- eval_expression(t_divide(t_integer(15),t_variable_name(y)),[(a,3), (y,5)],3,[(a,3), (y,5)]).
+?- eval_expression(t_divide(t_variable_name(y),t_integer(2)),[(a,3), (y,5)],2.5,[(a,3), (y,5)]).
+?- eval_expression(t_divide(t_float(2), t_float(2)),[(a,3.0), (y,5.0)],1, [(a,3.0), (y,5.0)]).
+?- eval_expression(t_divide(t_variable_name(a),t_variable_name(y)),[(a,6.0), (y,2.0)],3.0,[(a,6.0), (y,2.0)]).
+?- eval_expression(t_divide(t_float(10),t_variable_name(y)),[(a,3.0), (y,5.0)],2.0,[(a,3.0), (y,5.0)]).
+?- eval_expression(t_divide(t_variable_name(y),t_float(2)),[(a,3.0), (y,5.0)],2.5,[(a,3.0), (y,5.0)]).
+
+
 
 % TESTING ASSIGNMENT OPERATOR
 ?- eval_assignment_operator(t_assignment_operator, =).
