@@ -18,17 +18,16 @@ homebrew install swi-prolog
 ---
 
 ## Usage
-### Evaluating TestProgram.imp using Lexer.py
-`--evaluate` option is used to generate the tokens and evaluate them at the same time.
-> Requires `swipl` in the command line. Doesn't work with `swipl.exe` or swipl application.
+### If `swipl` is installed as command line (Tested on Arch Linux and MacOS)
 ```
- python Lexer.py TestProgram.imp --evaluate
+ python Lexer.py --evaluate TestProgram.imp
 ```
 
-If the user doesn't use the `--evaluate` flag, the tokens are saved in the `xxx.imptokens` file.
-
-### Evaluating the tokens file
-> Use this if you are using `swipl.exe` or swipl application
+### If `swipl` is not installed as command line
+```
+ python Lexer.py TestProgram.imp
+```
+- Open your prolog application in the src directory
 - Load the `main.pl` file
 - Type `main('xxx.imptokens')` where `xxx` is the name of the source code file.
 
@@ -36,7 +35,7 @@ If the user doesn't use the `--evaluate` flag, the tokens are saved in the `xxx.
 
 ## Vim Integration
 > Enables you to run IMP files from Vim
-> 
+>
 > Note: IMP File needs to be inside the `src` directory and vim should be opened from the `src` directory only.
 - Add to vimrc
 ```
@@ -48,14 +47,14 @@ augroup END
 
 - Add to ~/.vim/ftplugin/imp.vim
 ```
-nnoremap <F10> :!python Lexer.py --evaluate %<CR>
+nnoremap <F10> :w<CR>:!python Lexer.py --evaluate %<CR>
 ```
 - Go to `src` directory
-- Create new IMP file. 
+- Create new IMP file.
 ```
 touch newFile.imp
 ```
-- Open the IMP file. 
+- Open the IMP file.
 ```
 vim newFile.imp
 ```
